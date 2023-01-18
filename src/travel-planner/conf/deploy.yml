@@ -1,2 +1,7 @@
+mysql:
+  endpoint: "db-sp.cxkrpbpjdczs.us-east-2.rds.amazonaws.com:3306"
+  username: "admin"
+  password: "$$$NoMoney$$$"
+
 token:
   secret: "secret"

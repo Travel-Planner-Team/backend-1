@@ -1,30 +1,37 @@
 package util
 
 import (
-    "io/ioutil"
-    "path/filepath"
+	"io/ioutil"
+	"path/filepath"
 
-    "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
+type MySQLInfo struct {
+	Endpoint string `yaml:"endpoint"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
 type TokenInfo struct {
-    Secret string `yaml:"secret"`
+	Secret string `yaml:"secret"`
 }
 
 type ApplicationConfig struct {
-    TokenConfig         *TokenInfo         `yaml:"token"`
+	MySQLConfig *MySQLInfo `yaml:"mysql"`
+	TokenConfig *TokenInfo `yaml:"token"`
 }
 
 func LoadApplicationConfig(configDir, configFile string) (*ApplicationConfig, error) {
-    content, err := ioutil.ReadFile(filepath.Join(configDir, configFile))
-    if err != nil {
-        return nil, err
-    }
+	content, err := ioutil.ReadFile(filepath.Join(configDir, configFile))
+	if err != nil {
+		return nil, err
+	}
 
-    var config ApplicationConfig
-    err = yaml.Unmarshal(content, &config)
-    if err != nil {
-        return nil, err
-    }
-    return &config, nil
+	var config ApplicationConfig
+	err = yaml.Unmarshal(content, &config)
+	if err != nil {
+		return nil, err
+	}
+	return &config, nil
 }

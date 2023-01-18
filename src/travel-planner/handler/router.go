@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"travel-planner/util"
 	"net/http"
+	"travel-planner/util"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/form3tech-oss/jwt-go"
@@ -25,7 +25,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	})
 
 	router := mux.NewRouter()
-	
+
 	router.Handle("/app/{id}", jwtMiddleware.Handler(http.HandlerFunc(exampleHandler))).Methods("DELETE")
 
 	router.Handle("/signup", http.HandlerFunc(exampleHandler)).Methods("POST")
