@@ -23,3 +23,6 @@ origin  https://github.com/YOUR_GITHUB_ID/backend.git (push)
 upstream        https://github.com/Travel-Planner-Team/backend.git (fetch)
 upstream        https://github.com/Travel-Planner-Team/backend.git (push)
 ```
+
+## Resources
+1. [gorm API](https://gorm.io/docs/index.html)
