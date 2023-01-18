@@ -1,6 +1,6 @@
 package model
 
-type App struct {
+type AppStub struct {
 	Id          string `json:"id"`
 	User        string `json:"user"`
 	Title       string `json:"title"`
@@ -11,9 +11,15 @@ type App struct {
 	PriceID     string `json:"price_id"`
 }
 
+type UserStub struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Age      int64  `json:"age"`
+	Gender   string `json:"gender"`
+}
+
 type User struct {
-    Username string `json:"username"`
-    Password string `json:"password"`
-    Age      int64  `json:"age"`
-    Gender   string `json:"gender"`
+	Id       uint
+	Email    string
+	Password string
 }

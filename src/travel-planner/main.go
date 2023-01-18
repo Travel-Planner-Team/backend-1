@@ -16,7 +16,7 @@ func main() {
         panic(err)
     }
 
-    // backend.InitMySQLBackend(config.ElasticsearchConfig)
+    backend.InitMySQLBackend(config.MySQLConfig)
 
     log.Fatal(http.ListenAndServe(":8080", handler.InitRouter(config.TokenConfig)))
 }
