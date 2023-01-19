@@ -1,5 +1,7 @@
 package model
 
+import "gorm.io/gorm"
+
 type AppStub struct {
 	Id          string `json:"id"`
 	User        string `json:"user"`
@@ -19,6 +21,7 @@ type UserStub struct {
 }
 
 type User struct {
+	gorm.Model
 	Id       uint
 	Email    string
 	Password string

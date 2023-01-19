@@ -10,7 +10,9 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *MySQLBackend
+var (
+	DB *MySQLBackend
+)
 
 type MySQLBackend struct {
 	db *gorm.DB
@@ -28,7 +30,7 @@ func InitMySQLBackend(config *util.MySQLInfo) {
 	DB = &MySQLBackend{db}
 }
 
-func (backend *MySQLBackend) exampleQueryFunc() error {
+func (backend *MySQLBackend) ExampleQueryFunc() error {
 	var users []model.User
 	result := backend.db.Table("Users").Find(&users)
 	fmt.Println(users)
