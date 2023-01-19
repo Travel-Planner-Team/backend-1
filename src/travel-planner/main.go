@@ -17,6 +17,6 @@ func main() {
 	}
 
 	backend.InitMySQLBackend(config.MySQLConfig)
-	res, err := backend.DB.exampleQueryFunc("temp")
-	log.Fatal(http.ListenAndServe(":8080", handler.InitRouter(config.TokenConfig)))
+
+	log.Fatal(http.ListenAndServe(":9000", handler.InitRouter(config.TokenConfig)))
 }
