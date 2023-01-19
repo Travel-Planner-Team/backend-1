@@ -1,8 +1,21 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	//"regexp"
+	//"strconv"
+	"travel-planner/model"
+
+	//"time"
+
+	//"travel-planner/backend"
+	"travel-planner/service"
+
+	//"github.com/form3tech-oss/jwt-go"
+	"github.com/gorilla/mux"
+	//"github.com/pborman/uuid"
 )
 
 func exampleHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,4 +55,27 @@ func exampleHandler(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// fmt.Println("App is saved successfully.")
+}
+
+func getSites(w http.ResponseWriter, r *http.Request){
+	fmt.Println("Received a get sites request in the vacation")
+	w.Header().Set("Content-Type", "application/json")
+
+	vacationId := mux.Vars(r)["vacationid"]
+   var sites []model.Site
+   var err error
+   sites, err = service.getSitesList(vacationId)
+
+   if err != nil || sites == nil {
+	   http.Error(w, "Failed to get sites from bd", http.StatusInternalServerError)
+	    return
+   }
+
+// change to json
+     js, err := json.Marshal(sites)
+    if err != nil{
+    http.Error(w, "Failed to parse sites to JSON format", http.StatusInternalServerError)
+     }
+
+    w.Write(js)
 }
