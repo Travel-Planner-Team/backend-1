@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func exampleHandler(w http.ResponseWriter, r *http.Request) {
+func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse from body of request to get a json object.
 	fmt.Println("Sample API handler")
 
