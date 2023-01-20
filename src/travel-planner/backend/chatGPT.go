@@ -6,8 +6,9 @@ import (
     "travel-planner/util"
 	"travel-planner/model"
 
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 	gogpt "github.com/sashabaranov/go-gpt3"
+	//https://pkg.go.dev/github.com/aknuds1/go-gpt3
 )
 
 func SearchSitesInChatGPT(query string) ([]model.Site, error){
@@ -44,7 +45,7 @@ func ReadSitesFromChatGPT(resp  gogpt.CompletionResponse)([]model.Site, error){
 	for _, item := range choices {
 		var site model.Site 
 		site.Site_name = item.Text
-		site.Id = uuid.New()
+		site.Id = uuid.New().ID()
 		sites = append(sites,site )
 	}
 	

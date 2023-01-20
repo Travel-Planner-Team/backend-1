@@ -31,6 +31,7 @@ func SearchSites( interest, city string )([]model.Site, error){
   }
 
   backend.SearchDetailFromTrip(sites)
+  backend.DB.SaveSites(sites)
 
   return sites, nil
 

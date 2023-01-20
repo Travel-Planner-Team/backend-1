@@ -35,7 +35,7 @@ type Vacation struct {
 
 type User struct {
 
-	Id       string    `json:"id"`
+	Id       uint32    `json:"id"`
 	Email    string  `json:"email"`
 	Password string   `json:"password"`
 	Username string `json:"username"`
@@ -54,7 +54,7 @@ type User struct {
 // }
 
 type Site struct {
-	Id       string    `json:"id"`
+	Id       uint32    `json:"id"`
 	Site_name    string  `json:"destication_city"`
 	Rating string   `json:"rating"`
 	Phone_number string `json:"phone_number"`

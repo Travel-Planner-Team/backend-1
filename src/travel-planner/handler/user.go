@@ -15,7 +15,7 @@ import (
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gorilla/mux"
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 )
 
 func SigninHandler(w http.ResponseWriter, r *http.Request){
@@ -80,8 +80,8 @@ func SignupHandlerer(w http.ResponseWriter, r *http.Request){
      http.Error(w,"Invalid email address or password", http.StatusBadRequest)
 	 fmt.Printf("Invalid email address or password\n");
    }
-
-   user.Id = uuid.New()
+   
+   user.Id = uuid.New().ID()
    // check if the user already existed
    userFound, _ := backend.DB.ReadUserByEmail(user.Email)
 

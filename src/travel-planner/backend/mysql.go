@@ -117,3 +117,18 @@ func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error
 	return true, nil
 }
 
+func (backend *MySQLBackend) SaveSites(sites []model.Site)(bool, error){
+	var count = 0
+	for _, item := range sites {
+       result :=backend.db.Table("Site").Create(&item)
+
+	   if result.Error !=nil || result.RowsAffected == 0 {
+		fmt.Printf("Faild to save site %v\n",item.Site_name)
+	   }
+	   count++
+	}
+	if count == 0{
+		return false, errors.New("Failed to save all the sites")
+	}
+	return true, nil
+}
