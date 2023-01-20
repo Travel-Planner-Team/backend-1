@@ -81,12 +81,12 @@ func GetSitesHandler(w http.ResponseWriter, r *http.Request){
 }
 
 //Search sites be send on query keywords in current vacation
-func searchSitesHandler(w http.ResponseWriter, r *http.Request){
+func SearchSitesHandler(w http.ResponseWriter, r *http.Request){
 	fmt.Println("Received a search sites request in vacation")
 	w.Header().Set("Content-Type","application/json")
 
     //vacationId := mux.Vars(r)["vacationid"]
-    interest := r.URL.Query().Get("inteset")
+    interest := r.URL.Query().Get("interest")
 	city := "New York"
 
 	var sites []model.Site;

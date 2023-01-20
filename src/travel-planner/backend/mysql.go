@@ -8,6 +8,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"errors"
 )
 
 var (
@@ -47,11 +48,14 @@ func (backend *MySQLBackend) ReadUserByEmail(userEmail string) (*model.User, err
 	if err := result.Error; err != nil {
 		return nil, err
 	}
-	fmt.Println("User find in db")
-	return &user, nil
+	if result.RowsAffected != 0 {
+		return &user, nil
+	}
+	
+	return nil, errors.New("The email has not been registed before")
 }
 func (backend *MySQLBackend) SaveUser (user *model.User) (bool, error) {
-	result := backend.db.Create(&user)
+	result := backend.db.Table("Users").Create(&user)
 	if err := result.Error; err != nil{
 		return false, err
 	}

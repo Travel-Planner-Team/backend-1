@@ -64,28 +64,28 @@ type Site struct {
 }
 
    type TripSite struct{
-      Location_id string
-      Name string
-	  Address_obj Address_obj
+      Location_id string `json:"location_id"`
+      Name string `json:"name"`
+	  Address_obj Address_obj `json:"address_obj"`
 
     }
 	type Address_obj struct{
-        Street1 string
-        Street2 string
-        City string
-        State string
-        Country string
-        Postalcode string
-        Address_string string
+        Street1 string `json:"street1"`
+        Street2 string `json:"street2"`
+        City string `json:"city"`
+        State string `json:"state"`
+        Country string `json:"country"`
+        Postalcode string `json:"postalcode"`
+        Address_string string `json:"address_string"`
 	}
 
 	type TripDetails struct{
-        Location_id string
-		Name string
-		Description string
-		Web_url string
-		Address_string string
-        Rating string
-		Phone string
+        Location_id string `json:"location_id"`
+		Name string `json:"name"`
+		Description string `json:"description"`
+		Web_url string `json:"web_url"`
+		Address_string string `json:"address_string"`
+        Rating string `json:"rating"`
+		Phone string `json:"phone"`
 	}
 

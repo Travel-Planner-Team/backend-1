@@ -3,7 +3,7 @@ package backend
 import (
 	
 	"context"
-
+    "travel-planner/util"
 	"travel-planner/model"
 
 	"github.com/pborman/uuid"
@@ -11,7 +11,11 @@ import (
 )
 
 func SearchSitesInChatGPT(query string) ([]model.Site, error){
-	 c := gogpt.NewClient("chatGPTkey")
+
+    config, err := util.LoadApplicationConfig("conf", "chatGPT.yml")
+
+
+	 c := gogpt.NewClient(config.ChatGPTConfig.Key)
 	 ctx := context.Background()
 
 	 req := gogpt.CompletionRequest{

@@ -18,7 +18,7 @@ import (
 	"github.com/pborman/uuid"
 )
 
-func signinHandler(w http.ResponseWriter, r *http.Request){
+func SigninHandler(w http.ResponseWriter, r *http.Request){
   fmt.Println("Received sign request")
   w.Header().Set("Content-Type","text/plain")
 
@@ -62,9 +62,9 @@ func signinHandler(w http.ResponseWriter, r *http.Request){
 
 }
 
-func signupHandlerer(w http.ResponseWriter, r *http.Request){
+func SignupHandlerer(w http.ResponseWriter, r *http.Request){
    fmt.Println("Received a signup request")
-   w.Header().Set("Content-Type","text/plain")
+   w.Header().Set("Content-Type","application/json")
    
    decoder := json.NewDecoder(r.Body)
 
@@ -109,7 +109,7 @@ func signupHandlerer(w http.ResponseWriter, r *http.Request){
 }
 
 ////? 传送*user可？
-func getUserHandler(w http.ResponseWriter, r *http.Request){
+func GetUserHandler(w http.ResponseWriter, r *http.Request){
   fmt.Println("Received a get user information request")
   w.Header().Set("Content-Type","application/json")
 

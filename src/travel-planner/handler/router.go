@@ -29,10 +29,12 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	router.Handle("/app/{id}", jwtMiddleware.Handler(http.HandlerFunc(ExampleHandler))).Methods("DELETE")
 
 
-	router.Handle("/user/signup", http.HandlerFunc(signupHandlerer)).Methods("POST")
-	router.Handle("/user/signin", http.HandlerFunc(signinHandler)).Methods("POST")
+	router.Handle("/user/signup", http.HandlerFunc(SignupHandlerer)).Methods("POST")
+	router.Handle("/user/signin", http.HandlerFunc(SigninHandler)).Methods("POST")
 	router.Handle("/user/{id}",jwtMiddleware.Handler(http.HandlerFunc(UpdateUserHander))).Methods("POST")
-	router.Handle("/user/getUser/{id}",jwtMiddleware.Handler(http.HandlerFunc(getUserHandler))).Methods("GET")
+	router.Handle("/user/getUser/{id}",jwtMiddleware.Handler(http.HandlerFunc(GetUserHandler))).Methods("GET")
+	router.Handle("/vacation/sites/{interest}",jwtMiddleware.Handler(http.HandlerFunc(GetSitesHandler))).Methods("GET")
+	router.Handle("/vacation/{vacation_id}/sites/search",jwtMiddleware.Handler(http.HandlerFunc( SearchSitesHandler))).Methods("POST")
 
 	// TODO: add jwtMiddleware.Handler() wrapper
 	router.Handle("/vacation", http.HandlerFunc(GetVacationsHandler)).Methods("GET")
