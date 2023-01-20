@@ -74,8 +74,7 @@ func (backend *MySQLBackend) UpdateInfo (id, password, username,gender string, a
 }
 
 
-func (backend *MySQLBackend) getSitesInVacation (vacationId string) ([]model.Site, error){
-	//var ptype model.Site
+func (backend *MySQLBackend) GetSitesInVacation (vacationId string) ([]model.Site, error){
 	var sites []model.Site
     result := backend.db.Table("Sites").Where("vacation_id = ?",vacationId).Find(&sites)
 	if result.Error != nil{
@@ -87,5 +86,5 @@ func (backend *MySQLBackend) getSitesInVacation (vacationId string) ([]model.Sit
       return nil, nil
 	}
 	return sites,nil
-
 }
+

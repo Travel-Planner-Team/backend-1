@@ -57,14 +57,14 @@ func exampleHandler(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("App is saved successfully.")
 }
 
-func getSites(w http.ResponseWriter, r *http.Request){
+func GetSitesHandler(w http.ResponseWriter, r *http.Request){
 	fmt.Println("Received a get sites request in the vacation")
 	w.Header().Set("Content-Type", "application/json")
 
 	vacationId := mux.Vars(r)["vacationid"]
    var sites []model.Site
    var err error
-   sites, err = service.getSitesList(vacationId)
+   sites, err = service.GetSitesList(vacationId)
 
    if err != nil || sites == nil {
 	   http.Error(w, "Failed to get sites from bd", http.StatusInternalServerError)
@@ -79,3 +79,37 @@ func getSites(w http.ResponseWriter, r *http.Request){
 
     w.Write(js)
 }
+
+//Search sites be send on query keywords in current vacation
+func searchSitesHandler(w http.ResponseWriter, r *http.Request){
+	fmt.Println("Received a search sites request in vacation")
+	w.Header().Set("Content-Type","application/json")
+
+    //vacationId := mux.Vars(r)["vacationid"]
+    interest := r.URL.Query().Get("inteset")
+	city := "New York"
+
+	var sites []model.Site;
+	sites, err := service.SearchSites(interest, city);
+
+	if err != nil {
+	http.Error(w, "Failed to search sites", http.StatusInternalServerError)
+       return
+	}
+
+	js, err:= json.Marshal(sites)
+	
+	if err != nil {
+       http.Error(w, "Failed to parse sites into JSON format", http.StatusInternalServerError)
+       return
+   }
+   //返回
+   w.Write(js)
+}
+
+
+	
+	
+	
+
+

@@ -41,5 +41,33 @@ type Site struct {
 	Rating string   `json:"rating"`
 	Phone_number string `json:"phone_number"`
 	Vacation_id   string `json:"vacation_id"`
+	Description string `json:"description"`
+	Address string `json:"address"`
 }
+
+   type TripSite struct{
+      Location_id string
+      Name string
+	  Address_obj Address_obj
+
+    }
+	type Address_obj struct{
+        Street1 string
+        Street2 string
+        City string
+        State string
+        Country string
+        Postalcode string
+        Address_string string
+	}
+
+	type TripDetails struct{
+        Location_id string
+		Name string
+		Description string
+		Web_url string
+		Address_string string
+        Rating string
+		Phone string
+	}
 

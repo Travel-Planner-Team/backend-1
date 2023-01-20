@@ -1,14 +1,37 @@
 package service
-import(
-    //"fmt"
-   "travel-planner/backend"
+
+import (
+	"fmt"
+	"travel-planner/backend"
 	"travel-planner/model"
 )
 
-func getSitesList (vacationId string) ([]model.Site, error){
+func GetSitesList (vacationId string) ([]model.Site, error){
 	var sites []model.Site
-   sites, err := backend.DB.getSitesInVacation(vacationId)
+   sites, err := backend.DB.GetSitesInVacation(vacationId)
    // getSitesInVacation (vacationId string)
    return sites, err
+
+}
+
+func SearchSites( interest, city string )([]model.Site, error){
+  var sites []model.Site
+  var query string
+  if interest == "" {
+     query = "Find me a list of 10 top destination in " + city
+  }else{
+	query = "Find me a list of 10 top " + interest + city
+  }
+
+  sites, err := backend.SearchSitesInChatGPT(query)
+
+  if err != nil {
+    fmt.Println("Failed to get information from ChatGPT")
+    return nil, err
+  }
+
+  backend.SearchDetailFromTrip(sites)
+
+  return sites, nil
 
 }

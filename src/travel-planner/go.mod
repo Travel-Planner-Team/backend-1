@@ -13,6 +13,7 @@ require (
 	github.com/google/uuid v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/sashabaranov/go-gpt3 v0.0.0-20230112080207-81b5788cd68e // indirect
 	gorm.io/gorm v1.23.8 // indirect
 )
 
