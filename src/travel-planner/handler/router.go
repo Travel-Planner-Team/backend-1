@@ -26,13 +26,18 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 
 	router := mux.NewRouter()
 
-	router.Handle("/app/{id}", jwtMiddleware.Handler(http.HandlerFunc(exampleHandler))).Methods("DELETE")
+	router.Handle("/app/{id}", jwtMiddleware.Handler(http.HandlerFunc(ExampleHandler))).Methods("DELETE")
 
-	
+
 	router.Handle("/user/signup", http.HandlerFunc(signupHandlerer)).Methods("POST")
 	router.Handle("/user/signin", http.HandlerFunc(signinHandler)).Methods("POST")
 	router.Handle("/user/{id}",jwtMiddleware.Handler(http.HandlerFunc(UpdateUserHander))).Methods("POST")
 	router.Handle("/user/getUser/{id}",jwtMiddleware.Handler(http.HandlerFunc(getUserHandler))).Methods("GET")
+
+	// TODO: add jwtMiddleware.Handler() wrapper
+	router.Handle("/vacation", http.HandlerFunc(GetVacationsHandler)).Methods("GET")
+	router.Handle("/vacation/init", http.HandlerFunc(SaveVacationsHandler)).Methods("POST")
+
 
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})

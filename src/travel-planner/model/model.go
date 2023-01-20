@@ -1,5 +1,11 @@
 package model
 
+import (
+	"time"
+
+	//"gorm.io/gorm"
+)
+
 type AppStub struct {
 	Id          string `json:"id"`
 	User        string `json:"user"`
@@ -18,22 +24,34 @@ type UserStub struct {
 	Gender   string `json:"gender"`
 }
 
+type Vacation struct {
+	Id           uint32    `json:"id"`
+	Destination  string    `json:"destination"`
+	StartDate    time.Time `json:"start_date"`
+	EndDate      time.Time `json:"end_date"`
+	DurationDays int64     `json:"duration_days"`
+	UserId       uint32    `json:"user_id"`
+}
+
 type User struct {
+
 	Id       string    `json:"id"`
 	Email    string  `json:"email"`
 	Password string   `json:"password"`
 	Username string `json:"username"`
 	Age      int64  `json:"age"`
 	Gender   string `json:"gender"`
+
+
 }
-type Vacation struct {
-	Id       string    `json:"id"`
-	Destination_city    string  `json:"destication_city"`
-	State_date string   `json:"state_date"`
-	End_date string `json:"end_date"`
-	Duration      int64  `json:"duration"`
-	User_id   string `json:"user_id"`
-}
+// type Vacation struct {
+// 	Id       string    `json:"id"`
+// 	Destination_city    string  `json:"destication_city"`
+// 	State_date string   `json:"state_date"`
+// 	End_date string `json:"end_date"`
+// 	Duration      int64  `json:"duration"`
+// 	User_id   string `json:"user_id"`
+// }
 
 type Site struct {
 	Id       string    `json:"id"`
