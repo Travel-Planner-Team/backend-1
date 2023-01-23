@@ -28,7 +28,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 
 	router.Handle("/app/{id}", jwtMiddleware.Handler(http.HandlerFunc(ExampleHandler))).Methods("DELETE")
 
-	router.Handle("/signup", http.HandlerFunc(ExampleHandler)).Methods("POST")
+	router.Handle("/signup", http.HandlerFunc(signupHandler)).Methods("POST")
 	router.Handle("/signin", http.HandlerFunc(ExampleHandler)).Methods("POST")
 
 	// TODO: add jwtMiddleware.Handler() wrapper
