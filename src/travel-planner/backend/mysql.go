@@ -149,3 +149,19 @@ func (backend *MySQLBackend) SaveSingleSite(site model.Site) (bool, error) {
 
 	return true, nil
 }
+func (backend *MySQLBackend) ReadFromDB(user *model.User)(bool, error) {
+	result := backend.db.Select("ID", "Name").Find(&user)
+	fmt.Println(user, result)
+	if result.Error != nil {
+		return false, result.Error
+	}
+  return true, nil
+}
+
+func (backend *MySQLBackend) SaveUser(user *model.User) (bool, error) {
+	result := backend.db.Create(&user)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	return true, nil
+}

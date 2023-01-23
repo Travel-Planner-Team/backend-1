@@ -6,8 +6,9 @@ import (
 	"travel-planner/model"
 
 	//"travel-planner/constants"
-	"errors"
+	// "errors"
 	//"golang.org/x/tools/go/analysis/passes/nilness"
+	"travel-planner/util/errors"
 )
 
 func CheckUser(userEmail string, password string) (bool, error) {
@@ -22,14 +23,14 @@ func CheckUser(userEmail string, password string) (bool, error) {
 	return false, nil
 }
 
-func CheckUserInfo(userID uint32) (*model.User, error) {
+func CheckUserInfo(userID uint32) (*model.User, *errors.RestErr) {
 	user, err := backend.DB.ReadUserById(userID)
 	if err != nil {
-		return nil, err
+		return nil, errors.NewInternalServerError("Failed to load user")
 	}
 
 	if user == nil {
-		return nil, errors.New("unable to find app in db")
+		return nil, errors.NewBadRequestError("unable to find app in db")
 	}
 
 	return user, nil
@@ -45,5 +46,25 @@ func UpdateUserInfo(id uint32, password, username, gender string, age int64) (bo
 		return false, err
 	}
 
+	return success, nil
+}
+
+func CreateUser(user *model.User) (bool, *errors.RestErr) {
+	// username existed?
+	success, err := backend.DB.ReadFromDB(user)
+	if err != nil {
+		return false, errors.NewBadRequestError("The database error")
+	}
+	if !success {
+		return false, errors.NewBadRequestError("The user has already exist")
+	}
+
+	// save to db
+
+	success, err = backend.DB.SaveUser(user)
+	if err != nil {
+		return false, errors.NewInternalServerError("Failed to create user")
+	}
+	fmt.Printf("User is added: %s\n", user.Username)
 	return success, nil
 }
