@@ -62,7 +62,6 @@ func GetSearchTripAdvisor(name string)(model.TripSite){
 // 	 return nil, errors.New("unable to find sites in tripadvisor")
 //    }
    return tripSites[0]
-
 }
 
 func GetDetailTripAdvisor(location_id string) (model.TripDetails) {
