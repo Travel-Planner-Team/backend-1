@@ -63,28 +63,33 @@ func (backend *MySQLBackend) SaveUser (user *model.User) (bool, error) {
 	return true, nil
 }
 
-func (backend *MySQLBackend) ReadUserById (userId string)(*model.User, error){
+func (backend *MySQLBackend) ReadUserById (userId uint32)(*model.User, error){
 	var user model.User
-	result := backend.db.Table("Users").First(&user, "userId")
+	result := backend.db.Table("Users").First(&user, userId)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 // update interface has no return value in gorm?
-func (backend *MySQLBackend) UpdateInfo (id, password, username,gender string, age int64)(bool, error){
+func (backend *MySQLBackend) UpdateInfo (id uint32, password, username,gender string, age int64)(bool, error){
 	var user model.User
-	result := backend.db.Table("Users").First(&user, "userId")
+	result := backend.db.Table("Users").First(&user, id)
+
 	if result.Error != nil{
+		fmt.Printf("error for update in db %v\n",result.Error)
 		return false, result.Error
 	}
-    backend.db.Model(&user).Updates(model.User{Password: password, Username: username, Gender: gender, Age:age})
-	
+	fmt.Printf("userID:%v\n", user.Id)
+	fmt.Println(age)
+    backend.db.Table("Users").Model(&user).Select("Password", "Username","Gender", "Age").
+	Updates(model.User{Password: password, Username: username, Gender: gender, Age:age})
+	fmt.Printf("usersAge:%v\n",user.Age)
     return true, nil
 }
 
 
-func (backend *MySQLBackend) GetSitesInVacation (vacationId string) ([]model.Site, error){
+func (backend *MySQLBackend) GetSitesInVacation (vacationId uint32) ([]model.Site, error){
 	var sites []model.Site
     result := backend.db.Table("Sites").Where("vacation_id = ?",vacationId).Find(&sites)
 	if result.Error != nil{

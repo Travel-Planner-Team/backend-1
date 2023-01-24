@@ -14,7 +14,7 @@ import (
 	"travel-planner/service"
 
 	//"github.com/form3tech-oss/jwt-go"
-	"github.com/gorilla/mux"
+	//"github.com/gorilla/mux"
 	//"github.com/pborman/uuid"
 )
 
@@ -60,8 +60,10 @@ func exampleHandler(w http.ResponseWriter, r *http.Request) {
 func GetSitesHandler(w http.ResponseWriter, r *http.Request){
 	fmt.Println("Received a get sites request in the vacation")
 	w.Header().Set("Content-Type", "application/json")
-
-	vacationId := mux.Vars(r)["vacationid"]
+   
+	//line 66 is hardcode for test, we cannot get info from http yet, we should use line65 
+	//vacationId := mux.Vars(r)["vacationid"]
+   var	vacationId uint32 = 1
    var sites []model.Site
    var err error
    sites, err = service.GetSitesList(vacationId)
@@ -85,7 +87,9 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request){
 	fmt.Println("Received a search sites request in vacation")
 	w.Header().Set("Content-Type","application/json")
 
+	//line 93 is hardcode for test, we cannot get info from http yet, we should use line65 
     //vacationId := mux.Vars(r)["vacationid"]
+	
     interest := r.URL.Query().Get("interest")
 	city := "New York"
 

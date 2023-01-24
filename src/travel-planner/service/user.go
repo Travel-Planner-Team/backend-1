@@ -34,7 +34,7 @@ func AddUser (user *model.User) (bool, error){
 
 }
 
-func CheckUserInfo (userID  string) (*model.User, error){
+func CheckUserInfo (userID  uint32) (*model.User, error){
      user, err := backend.DB.ReadUserById(userID)
 	 if err != nil {
 		return nil, err
@@ -48,8 +48,11 @@ func CheckUserInfo (userID  string) (*model.User, error){
 
 }
 
-func UpdateUserInfo(id, password, username,gender string, age int64)(bool, error){
+func UpdateUserInfo(id uint32, password, username, gender string, age int64)(bool, error){
+	fmt.Println("updateuser")
+	
     success, err := backend.DB.UpdateInfo(id, password, username,gender, age)
+	
 	if err != nil {
 		return false, err
 	}

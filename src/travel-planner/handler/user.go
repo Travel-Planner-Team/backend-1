@@ -19,7 +19,7 @@ import (
 )
 
 func SigninHandler(w http.ResponseWriter, r *http.Request){
-  fmt.Println("Received sign request")
+  fmt.Println("Received signin request")
   w.Header().Set("Content-Type","text/plain")
 
   // Get User infor from client
@@ -45,12 +45,19 @@ func SigninHandler(w http.ResponseWriter, r *http.Request){
   }
 
   // generate token
-  token := jwt.NewWithClaims(jwt.SigningMethodES256,jwt.MapClaims{
+  token := jwt.NewWithClaims(jwt.SigningMethodHS256,jwt.MapClaims{
 	"email": user.Email,
 	"exp" :   time.Now().Add(time.Hour * 24).Unix(),
   })
   // sign and get the complete encoded token as a string using the secret
+  if(token == nil){
+    fmt.Print("faild to get token")
+  }
+  fmt.Printf("token : %v\n", token)
+  fmt.Printf("mySigningKey : %v\n", mySigningKey)
+ 
   tokenString, err := token.SignedString(mySigningKey)
+  fmt.Printf("mytokensgring : %v\n", tokenString)
 
   if err != nil {
 	http.Error(w, "Failed to generate token", http.StatusInternalServerError)
@@ -115,9 +122,12 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request){
 
   
   id := mux.Vars(r)["id"]
+  fmt.Printf("id: %v\n", id)
 
-  
-  user, err := service.CheckUserInfo(id)
+  intId ,_:=strconv.ParseInt(id, 0, 64)
+  fmt.Printf("intId : %v\n", intId)
+  pasedId := uint32(intId)
+  user, err := service.CheckUserInfo(uint32(pasedId))
 
   if err != nil {
 	http.Error(w, "Failed to read user info from backend", http.StatusInternalServerError)
@@ -141,16 +151,19 @@ func UpdateUserHander(w http.ResponseWriter, r *http.Request){
 	user := r.Context().Value("user")
 	fmt.Println(user)
 	
-   
-	
 	id := mux.Vars(r)["id"]
-	fmt.Println(id)
+  fmt.Printf("id : %v\n", id)
+  intId ,_:=strconv.ParseInt(id, 0, 64)
+  fmt.Printf("intId : %v\n", intId)
+  parsedId := uint32(intId)
+  
+	fmt.Println(parsedId)
 	password := r.FormValue("password")
 	username := r.FormValue("username")
 	gender := r.FormValue("gender")
-    age, _:=strconv.ParseInt(r.FormValue("age"), 10, 64)
-     
-	success, err :=service.UpdateUserInfo(id, password, username,gender, age)
+  age, _:=strconv.ParseInt(r.FormValue("age"), 10, 64)
+  fmt.Printf("age:%v\n",age)   
+	success, err :=service.UpdateUserInfo(parsedId, password, username,gender, age)
 	
 	if !success {
 		http.Error(w, "Failed to update user to backend",http.StatusInternalServerError)

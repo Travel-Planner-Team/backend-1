@@ -20,8 +20,8 @@ func SearchSitesInChatGPT(query string) ([]model.Site, error){
 	 ctx := context.Background()
 
 	 req := gogpt.CompletionRequest{
-		Model:  "text-davinci-003",
-		//Model: gogpt.GPT3Ada
+		//Model:  "text-davinci-003",
+		Model: gogpt.GPT3Ada,
 		MaxTokens:200,
 		Prompt: query,
 	

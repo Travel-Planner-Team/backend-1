@@ -37,7 +37,8 @@ func SearchDetailFromTrip(sites []model.Site) {
 
 func GetSearchTripAdvisor(name string)(model.TripSite){
 	key := constants.TRIPADVISOR_API_KEY
-	//url :=           "https://api.content.tripadvisor.com/api/v1/location/search?key=62A808FFA5BB43458AA517B597F7C0E1&searchQuery=hi&language=en"
+	
+	//url := "https://api.content.tripadvisor.com/api/v1/location/search?key=62A808FFA5BB43458AA517B597F7C0E1&searchQuery=hi&language=en"
 	url := fmt.Sprintf("https://api.content.tripadvisor.com/api/v1/location/%s/search?key=%s&searchQuery=%s&language=en", key, name)
 	fmt.Println(url)
 
