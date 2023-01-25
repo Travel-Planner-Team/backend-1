@@ -22,7 +22,7 @@ type TokenInfo struct {
 type ApplicationConfig struct {
 	MySQLConfig *MySQLInfo `yaml:"mysql"`
 	TokenConfig *TokenInfo `yaml:"token"`
-	ChatGPTConfig *ChatGPTConfig `yaml:"ChatGPT"`
+	ChatGPTConfig *ChatGPTConfig `yaml:"chatGPT"`
 }
 
 

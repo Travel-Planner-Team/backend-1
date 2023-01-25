@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	
 	"net/http"
 	//"regexp"
 	//"strconv"
@@ -89,9 +90,11 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request){
 
 	//line 93 is hardcode for test, we cannot get info from http yet, we should use line65 
     //vacationId := mux.Vars(r)["vacationid"]
-	
-    interest := r.URL.Query().Get("interest")
-	city := "New York"
+	 city := r.URL.Query().Get("city")
+     interest := r.URL.Query().Get("interest")
+
+	// interest := "Museum"
+	// city := "New York"
 
 	var sites []model.Site;
 	sites, err := service.SearchSites(interest, city);
@@ -110,6 +113,8 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request){
    //返回
    w.Write(js)
 }
+
+
 
 
 	
