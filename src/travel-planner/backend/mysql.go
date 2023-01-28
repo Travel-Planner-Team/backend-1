@@ -55,3 +55,13 @@ func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error
 	}
 	return true, nil
 }
+
+func (backend *MySQLBackend) GetActivityFromPlanId(plan_id uint32) ([]model.Activity, error) {
+	var activities []model.Activity
+	result := backend.db.Table("Activity").Find(&activities)
+	fmt.Print(activities, result)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return activities, nil
+}
