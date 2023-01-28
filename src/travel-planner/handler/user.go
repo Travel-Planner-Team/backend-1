@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"travel-planner/model"
 	"travel-planner/service"
 	"travel-planner/util/errors"
+
+	"github.com/google/uuid"
 )
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,13 +23,29 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		err := errors.NewBadRequestError("Cannot decode user data from client")
 	  fmt.Printf("Cannot decode user data from client %v\n", err)
 	}
-	if err := user.Validate(); err != nil {
-		return
+	// if err := user.Validate(); err != nil {
+	// 	return
+	// }
+
+	if user.Email == "" {
+		errors.NewBadRequestError("Invalid email address")
 	}
+	if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
+    errors.NewBadRequestError("Invalid username")
+  }
+	if user.Password == "" {
+    errors.NewBadRequestError("Invalid password")
+  }
+
+	user.Id = uuid.New().ID();
+	
+
+
+  fmt.Println(user)
 	success, err := service.CreateUser(&user)
 	if err != nil {
-		err := errors.NewInternalServerError("Failed to save user to Elasticsearch")
-		fmt.Printf("Failed to save user to Elasticsearch %v\n", err)
+		err := errors.NewInternalServerError("Failed to save user to DB")
+		fmt.Printf("Failed to save user to DB %v\n", err)
     return
 	}
 	if !success {
