@@ -5,19 +5,16 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+  "time"
+  "strconv"
   
 	"travel-planner/model"
 	"travel-planner/service"
 	"travel-planner/util/errors"
 
-	"github.com/google/uuid"
-
-	"strconv"
-	"time"
-
 	"github.com/form3tech-oss/jwt-go"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-
 )
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
@@ -48,6 +45,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	user.Id = uuid.New().ID();
 
   fmt.Println(user)
+
 	success, err := service.CreateUser(&user)
 	if err != nil {
 		err := errors.NewInternalServerError("Failed to save user to DB")
@@ -57,7 +55,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	if !success {
 		errors.NewBadRequestError("User already exists")
 		fmt.Println("User already exists")
-    return
+		return
 	}
 	fmt.Printf("User added successfully: %s.\n", user.Username)
 }
@@ -129,8 +127,8 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to read user info from backend", http.StatusInternalServerError)
 		return
 	}
-	//? 传送*user可？
-	js, err := json.Marshal(user)
+
+	js, _ := json.Marshal(user)
 
 	if err != nil {
 		http.Error(w, "Failed to parse User into JSON format", http.StatusInternalServerError)

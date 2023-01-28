@@ -58,6 +58,16 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
+func InitPlanHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Plan had been init"))
+}
+
+func MakeRouteForVacation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received request: /vacation/{vacation_id}/plan/routes")
+	w.Write([]byte("Potential Routes Sent"))
+}
+
 func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received request: /vacation/{vacation_id}/plan")
 	vacationID := r.Context().Value("vacation_id")
@@ -89,12 +99,3 @@ func SaveActivitiesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Activities saved: " + fmt.Sprint(vacationId) + fmt.Sprint(plan_id)))
 }
 
-func InitPlanHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Plan had been init"))
-}
-
-func MakeRouteForVacation(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received request: /vacation/{vacation_id}/plan/routes")
-	w.Write([]byte("Potential Routes Sent"))
-}

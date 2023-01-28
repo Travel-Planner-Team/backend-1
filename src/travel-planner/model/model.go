@@ -1,7 +1,12 @@
 package model
 
 import (
+	// "fmt"
+	"regexp"
+	"strings"
 	"time"
+	"travel-planner/util/errors"
+	// "gorm.io/gorm"
 )
 
 type AppStub struct {
@@ -31,6 +36,12 @@ type Vacation struct {
 	UserId       uint32    `json:"user_id"`
 }
 
+//	type Model struct {
+//		ID uint `jason:"id"` // `gorm:"primary_key jason:"id"`
+//		CreatedAt   time.Time  `json:"created_at"`
+//		UpdatedAt   time.Time  `json:"updated_at"`
+//		DeletedAt   *time.Time `json:"deleted_at"`
+//	}
 type User struct {
 	Id       uint32 `json:"id"`
 	Email    string `json:"email"`
@@ -55,6 +66,7 @@ type TripSite struct {
 	Name        string      `json:"name"`
 	Address_obj Address_obj `json:"address_obj"`
 }
+
 type Address_obj struct {
 	Street1        string `json:"street1"`
 	Street2        string `json:"street2"`
@@ -87,8 +99,8 @@ type Activity struct {
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
 	Date      time.Time `json:"date"`
-	Duration  int64		`json:"duration"`	
-	Site_id   uint32	`json:"site_id"`
+	Duration  int64     `json:"duration"`
+	Site_id   uint32    `json:"site_id"`
 }
 
 type Transportaion struct {
@@ -99,18 +111,19 @@ type Transportaion struct {
 	Date      time.Time `json:"date"`
 }
 
-// func (user *User) Validate() *errors.RestErr {
-// 	user.Username = strings.TrimSpace(user.Username)
-// 	user.Password = strings.TrimSpace(user.Password)
-// 	user.Email = strings.TrimSpace(user.Email)
-// 	if user.Email == "" {
-// 		return errors.NewBadRequestError("Invalid email address")
-// 	}
-// 	if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
-//     return errors.NewBadRequestError("Invalid username")
-//   }
-// 	if user.Password == "" {
-//     return errors.NewBadRequestError("Invalid password")
-//   }
-// 	return nil
-// }
+
+func (user *User) Validate() *errors.RestErr {
+	user.Username = strings.TrimSpace(user.Username)
+	user.Password = strings.TrimSpace(user.Password)
+	user.Email = strings.TrimSpace(user.Email)
+	if user.Email == "" {
+		return errors.NewBadRequestError("Invalid email address")
+	}
+	if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
+		return errors.NewBadRequestError("Invalid username")
+	}
+	if user.Password == "" {
+		return errors.NewBadRequestError("Invalid password")
+	}
+	return nil
+}

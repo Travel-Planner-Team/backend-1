@@ -49,5 +49,9 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "DELETE"})
 
+	router.Handle("/vacation/{vacation_id}/plan", http.HandlerFunc(GetVacationPlanHandler)).Methods("GET")
+	router.Handle("/vacation/{vacation_id}/plan/init", http.HandlerFunc(InitPlanHandler)).Methods("POST")
+	router.Handle("/vacation/{vacation_id}/plan/{plan_id}/save", http.HandlerFunc(SaveActivitiesHandler)).Methods("POST")
+
 	return handlers.CORS(originsOk, headersOk, methodsOk)(router)
 }
