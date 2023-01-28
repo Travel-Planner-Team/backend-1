@@ -58,37 +58,6 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
-func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received request: /vacation/{vacation_id}/plan")
-	vacationID := r.Context().Value("vacation_id")
-	fmt.Printf("vacationID: %v\n", vacationID)
-	w.Header().Set("Content_Type", "application/json")
-	// Create a slice of activities
-	activities := []model.Activity{
-		{Id: 1, StartTime: time.Now(), EndTime: time.Now().Add(time.Hour), Date: time.Now(), Duration: 3600, Site_id: 100},
-		{Id: 2, StartTime: time.Now().Add(time.Hour * 2), EndTime: time.Now().Add(time.Hour * 3), Date: time.Now(), Duration: 3600, Site_id: 200},
-		{Id: 3, StartTime: time.Now().Add(time.Hour * 4), EndTime: time.Now().Add(time.Hour * 5), Date: time.Now(), Duration: 3600, Site_id: 300},
-	}
-
-	// Marshal the activities to JSON
-	jsonData, err := json.Marshal(activities)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Write the JSON data to the response
-	w.Write(jsonData)
-}
-
-func SaveActivitiesHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received request: /vacation/{vacation_id}/plan/{plan_id}/save")
-	vacationId := r.Context().Value("vacation_id")
-	plan_id := r.Context().Value("plan_id")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Activities saved: " + fmt.Sprint(vacationId) + fmt.Sprint(plan_id)))
-}
-
 func InitPlanHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Plan had been init"))
@@ -128,14 +97,4 @@ func SaveActivitiesHandler(w http.ResponseWriter, r *http.Request) {
 	plan_id := r.Context().Value("plan_id")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Activities saved: " + fmt.Sprint(vacationId) + fmt.Sprint(plan_id)))
-}
-
-func InitPlanHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Plan had been init"))
-}
-
-func MakeRouteForVacation(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received request: /vacation/{vacation_id}/plan/routes")
-	w.Write([]byte("Potential Routes Sent"))
 }
