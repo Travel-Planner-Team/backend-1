@@ -99,6 +99,7 @@ type TripDetails struct {
 //   }
 // 	return nil
 // }
+
 type Plan struct {
 	Id          uint32    `json:"id"`
 	Start_date  time.Time `json:"start_date"`
