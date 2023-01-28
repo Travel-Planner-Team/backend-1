@@ -4,20 +4,27 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+<<<<<<< HEAD
 	"time"
 	"regexp"
 	"strconv"
 
+=======
+	"regexp"
+>>>>>>> 858246c (tested version)
 	"travel-planner/model"
 	//"travel-planner/backend"
 	"travel-planner/service"
 	"travel-planner/util/errors"
 
+<<<<<<< HEAD
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gorilla/mux"
 
 	//"github.com/google/uuid"
 
+=======
+>>>>>>> 858246c (tested version)
 	"github.com/google/uuid"
 )
 
