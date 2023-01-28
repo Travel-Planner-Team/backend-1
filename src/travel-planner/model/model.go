@@ -74,3 +74,27 @@ type TripDetails struct {
 	Rating         string `json:"rating"`
 	Phone          string `json:"phone"`
 }
+
+type Plan struct {
+	Id          uint32    `json:"id"`
+	Start_date  time.Time `json:"start_date"`
+	Duration    int64     `json:"duration"`
+	Vacation_id uint32    `json:"vacation_id"`
+}
+
+type Activity struct {
+	Id        uint32    `json:"id"`
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+	Date      time.Time `json:"date"`
+	Duration  int64		`json:"duration"`	
+	Site_id   uint32	`json:"site_id"`
+}
+
+type Transportaion struct {
+	Id        uint32    `json:"id"`
+	Type      string    `json:"type"`
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+	Date      time.Time `json:"date"`
+}
