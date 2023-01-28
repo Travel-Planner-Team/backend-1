@@ -87,22 +87,6 @@ type TripDetails struct {
 	Phone          string `json:"phone"`
 }
 
-// func (user *User) Validate() *errors.RestErr {
-// 	user.Username = strings.TrimSpace(user.Username)
-// 	user.Password = strings.TrimSpace(user.Password)
-// 	user.Email = strings.TrimSpace(user.Email)
-// 	if user.Email == "" {
-// 		return errors.NewBadRequestError("Invalid email address")
-// 	}
-// 	if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
-//     return errors.NewBadRequestError("Invalid username")
-//   }
-// 	if user.Password == "" {
-//     return errors.NewBadRequestError("Invalid password")
-//   }
-// 	return nil
-// }
-
 type Plan struct {
 	Id          uint32    `json:"id"`
 	Start_date  time.Time `json:"start_date"`
@@ -127,21 +111,7 @@ type Transportaion struct {
 	Date      time.Time `json:"date"`
 }
 
-//	func (user *User) Validate() *errors.RestErr {
-//		user.Username = strings.TrimSpace(user.Username)
-//		user.Password = strings.TrimSpace(user.Password)
-//		user.Email = strings.TrimSpace(user.Email)
-//		if user.Email == "" {
-//			return errors.NewBadRequestError("Invalid email address")
-//		}
-//		if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
-//	    return errors.NewBadRequestError("Invalid username")
-//	  }
-//		if user.Password == "" {
-//	    return errors.NewBadRequestError("Invalid password")
-//	  }
-//		return nil
-//	}
+
 func (user *User) Validate() *errors.RestErr {
 	user.Username = strings.TrimSpace(user.Username)
 	user.Password = strings.TrimSpace(user.Password)
