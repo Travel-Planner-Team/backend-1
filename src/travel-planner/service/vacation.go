@@ -22,3 +22,18 @@ func AddVacation(vacation *model.Vacation) (bool, error) {
 	success, err := backend.DB.SaveVacation(vacation)
 	return success, err
 }
+
+func GetActivitiesInfoFromPlanId(plan_id uint32) ([]model.Activity, error) {
+	activities, err := backend.DB.GetActivityFromPlanId(plan_id)
+	if err != nil {
+		return nil, err
+	}
+
+	if activities == nil || len(activities) == 0 {
+		return nil, errors.New("empty or invalid vacations, check the Database")
+	}
+	return activities, nil
+
+}
+
+
