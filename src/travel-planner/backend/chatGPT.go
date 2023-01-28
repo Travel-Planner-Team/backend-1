@@ -22,9 +22,6 @@ func SearchSitesInChatGPT(query string) ([]model.Site, error) {
 	// get the config from config file
 	// print client config
 	fmt.Println(query)
-	//   fmt.Printf("key: %v\n", os.Getenv("GPT_KEY"))
-	//  c := gogpt.NewClient(os.Getenv("GPT_KEY"))
-	//  ctx := context.Background()
 
 	req := gogpt.CompletionRequest{
 		Model:       "text-davinci-003",
@@ -45,11 +42,6 @@ func SearchSitesInChatGPT(query string) ([]model.Site, error) {
 	fmt.Println(reply)
 	var sites []model.Site
 
-	//a := regexp.MustCompile(`0-9\s`)
-	//res := a.Split(reply, -1)
-	//  res := strings.Split(reply, ".")
-	//  fmt.Println(res)
-
 	// parse rsp_text return a list of string
 	rsp_list := strings.Split(reply, "\n")
 	// print each item in rsp_list
@@ -66,7 +58,6 @@ func SearchSitesInChatGPT(query string) ([]model.Site, error) {
 	}
 
 	return sites, nil
-
 }
 
 func ReadSitesFromChatGPT(resp gogpt.CompletionResponse) ([]model.Site, error) {
