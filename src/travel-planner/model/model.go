@@ -57,6 +57,7 @@ type TripSite struct {
 	Name        string      `json:"name"`
 	Address_obj Address_obj `json:"address_obj"`
 }
+
 type Address_obj struct {
 	Street1        string `json:"street1"`
 	Street2        string `json:"street2"`
@@ -104,8 +105,8 @@ type Activity struct {
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
 	Date      time.Time `json:"date"`
-	Duration  int64		`json:"duration"`	
-	Site_id   uint32	`json:"site_id"`
+	Duration  int64     `json:"duration"`
+	Site_id   uint32    `json:"site_id"`
 }
 
 type Transportaion struct {
