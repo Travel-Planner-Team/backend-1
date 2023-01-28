@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type AppStub struct {
@@ -34,10 +32,47 @@ type Vacation struct {
 }
 
 type User struct {
-	gorm.Model
-	Id       uint
-	Email    string
-	Password string
+	Id       uint32 `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Username string `json:"username"`
+	Age      int64  `json:"age"`
+	Gender   string `json:"gender"`
+}
+
+type Site struct {
+	Id           uint32 `json:"id"`
+	Site_name    string `json:"site_name"`
+	Rating       string `json:"rating"`
+	Phone_number string `json:"phone_number"`
+	Vacation_id  string `json:"vacation_id"`
+	Description  string `json:"description"`
+	Address      string `json:"address"`
+}
+
+type TripSite struct {
+	Location_id string      `json:"location_id"`
+	Name        string      `json:"name"`
+	Address_obj Address_obj `json:"address_obj"`
+}
+type Address_obj struct {
+	Street1        string `json:"street1"`
+	Street2        string `json:"street2"`
+	City           string `json:"city"`
+	State          string `json:"state"`
+	Country        string `json:"country"`
+	Postalcode     string `json:"postalcode"`
+	Address_string string `json:"address_string"`
+}
+
+type TripDetails struct {
+	Location_id    string `json:"location_id"`
+	Name           string `json:"name"`
+	Description    string `json:"description"`
+	Web_url        string `json:"web_url"`
+	Address_string string `json:"address_string"`
+	Rating         string `json:"rating"`
+	Phone          string `json:"phone"`
 }
 
 type Plan struct {

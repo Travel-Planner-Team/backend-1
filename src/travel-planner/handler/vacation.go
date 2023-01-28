@@ -31,7 +31,7 @@ func GetVacationsHandler(w http.ResponseWriter, r *http.Request) {
 
 func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received request: /vacation/init")
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "application/json")
 
 	decoder := json.NewDecoder(r.Body)
 	var vacation model.Vacation
@@ -49,7 +49,13 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to save", http.StatusInternalServerError)
 	}
 
-	w.Write([]byte("Vacation saved: " + fmt.Sprint(vacation.Id)))
+	js, err := json.Marshal(vacation)
+	if err != nil {
+		http.Error(w, "Fail to save vacation into DB", http.StatusInternalServerError)
+		return
+	}
+	// w.Write([]byte("Vacation saved: " + fmt.Sprint(vacation.Id)))
+	w.Write(js)
 }
 
 func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
