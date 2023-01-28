@@ -55,7 +55,7 @@ type User struct {
 
 type Site struct {
 	Id       uint32    `json:"id"`
-	Site_name    string  `json:"destication_city"`
+	Site_name    string  `json:"site_name"`
 	Rating string   `json:"rating"`
 	Phone_number string `json:"phone_number"`
 	Vacation_id   string `json:"vacation_id"`
