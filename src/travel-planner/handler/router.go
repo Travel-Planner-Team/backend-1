@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"travel-planner/util"
 
@@ -19,6 +20,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			fmt.Println(string(mySigningKey))
 			return []byte(mySigningKey), nil
 		},
 		SigningMethod: jwt.SigningMethodHS256,

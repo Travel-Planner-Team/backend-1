@@ -28,7 +28,7 @@ type UserStub struct {
 }
 
 type Vacation struct {
-	Id           uint32    `json:"id"`
+	Id           string    `json:"id"`
 	Destination  string    `json:"destination"`
 	StartDate    time.Time `json:"start_date"`
 	EndDate      time.Time `json:"end_date"`
@@ -88,10 +88,10 @@ type TripDetails struct {
 }
 
 type Plan struct {
-	Id          uint32    `json:"id"`
-	Start_date  time.Time `json:"start_date"`
-	Duration    int64     `json:"duration"`
-	Vacation_id uint32    `json:"vacation_id"`
+	Id         string    `json:"id"`
+	Start_date time.Time `json:"start_date"`
+	Duration_days   int64     `json:"duration_days"`
+	VacationId string    `json:"VacationId"`
 }
 
 type Activity struct {

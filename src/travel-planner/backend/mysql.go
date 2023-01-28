@@ -152,25 +152,12 @@ func (backend *MySQLBackend) SaveSingleSite(site model.Site) (bool, error) {
 	return true, nil
 }
 
-func (backend *MySQLBackend) ReadFromDB(user *model.User) (bool, error) {
-	result := backend.db.Table("Users").Select("email").Find(&user)
-	fmt.Println(user, result)
-	if result.Error != nil {
-		return false, result.Error
+func (backend *MySQLBackend) SaveVacationPlanToSQL(plan model.Plan) (error) {
+	result := backend.db.Table("Plans").Create(&plan)
+	if result.Error != nil || result.RowsAffected == 0 {
+		fmt.Printf("Faild to save plan %v\n", plan.Id)
 	}
-	if result.RowsAffected != 0 {
-		return true, nil
-	}
-	return true, nil
-}
-
-func (backend *MySQLBackend) SaveUser(user *model.User) (bool, error) {
-	fmt.Println(user)
-	result := backend.db.Table("Users").Create(&user)
-	if result.Error != nil {
-		return false, result.Error
-	}
-	return true, nil
+	return nil
 }
 
 func (backend *MySQLBackend) AddVacationIdToSite(siteID uint32, vacationID string)(bool, error){

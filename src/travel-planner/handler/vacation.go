@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 	"travel-planner/model"
 	"travel-planner/service"
 
-	"github.com/google/uuid"
+	"github.com/pborman/uuid"
 )
 
 func GetVacationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -35,14 +36,14 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 	var vacation model.Vacation
-
+	fmt.Println(r.Body)
 	if err := decoder.Decode(&vacation); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Cannot decode vacation input", http.StatusBadRequest)
 		return
 	}
 
-	vacation.Id = uuid.New().ID()
+	vacation.Id = uuid.New()
 	success, err := service.AddVacation(&vacation)
 	if err != nil || !success {
 		fmt.Println(err)
@@ -54,7 +55,7 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Fail to save vacation into DB", http.StatusInternalServerError)
 		return
 	}
-	// w.Write([]byte("Vacation saved: " + fmt.Sprint(vacation.Id)))
+	w.Write([]byte("Vacation saved: " + fmt.Sprint(vacation.Id)))
 	w.Write(js)
 }
 
@@ -99,3 +100,59 @@ func SaveActivitiesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Activities saved: " + fmt.Sprint(vacationId) + fmt.Sprint(plan_id)))
 }
 
+func InitVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received request: /vacation/{vacation_id}/plan/init")
+	// Decode the request body into a Plan struct
+	dateString := r.FormValue("start_date")
+	startDate, err := time.Parse("2006-01-02", dateString)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	duration, err := strconv.ParseInt(r.FormValue("duration"), 10, 64)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	vacation_id := r.FormValue("vacation_id")
+	plan := model.Plan{
+		Id:            uuid.New(),
+		Start_date:    startDate,
+		Duration_days: duration,
+		VacationId:    vacation_id,
+	}
+	// err := json.NewDecoder(r.Body).Decode(&plan)
+	// if err != nil {
+	// 	http.Error(w, "Error decoding request body", http.StatusBadRequest)
+	// 	return
+	// }
+
+	// Save the plan to the database
+	err = service.SaveVacationPlan(plan)
+	if err != nil {
+		http.Error(w, "Error saving plan to database", http.StatusInternalServerError)
+		return
+	}
+
+	// Marshal the plan to JSON
+	jsonData, err := json.Marshal(plan)
+	if err != nil {
+		http.Error(w, "Error marshalling JSON", http.StatusInternalServerError)
+		return
+	}
+
+	// Set the content type to JSON
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON data to the response
+	w.Write(jsonData)
+}
+
+func MakeRouteForVacation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received request: /vacation/{vacation_id}/plan/routes")
+	w.Write([]byte("Potential Routes Sent"))
+}
