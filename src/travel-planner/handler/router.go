@@ -32,10 +32,12 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	router.Handle("/signin", http.HandlerFunc(ExampleHandler)).Methods("POST")
 
 	router.Handle("/user/signin", http.HandlerFunc(SigninHandler)).Methods("POST")
-	router.Handle("/user/{id}", jwtMiddleware.Handler(http.HandlerFunc(UpdateUserHander))).Methods("POST")
-	router.Handle("/user/getUser/{id}", jwtMiddleware.Handler(http.HandlerFunc(GetUserHandler))).Methods("GET")
-	router.Handle("/vacation/MyVacation", jwtMiddleware.Handler(http.HandlerFunc(GetSitesHandler))).Methods("GET")
-	router.Handle("/vacation", jwtMiddleware.Handler(http.HandlerFunc(SearchSitesHandler))).Methods("POST")
+	router.Handle("/user/{id}",jwtMiddleware.Handler(http.HandlerFunc(UpdateUserHander))).Methods("POST")
+	router.Handle("/user/getUser/{id}",jwtMiddleware.Handler(http.HandlerFunc(GetUserHandler))).Methods("GET")
+	router.Handle("/vacation/MyVacation",jwtMiddleware.Handler(http.HandlerFunc(GetSitesHandler))).Methods("GET")
+	router.Handle("/vacation",jwtMiddleware.Handler(http.HandlerFunc( SearchSitesHandler))).Methods("POST")
+  router.Handle("/vacation/{vacation_id}/sites/{id}", jwtMiddleware.Handler(http.HandlerFunc(addSiteHandler))).Methods("POST")
+
 
 	// TODO: add jwtMiddleware.Handler() wrapper
 	router.Handle("/vacation", jwtMiddleware.Handler(http.HandlerFunc(GetVacationsHandler))).Methods("GET")
@@ -48,10 +50,6 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "DELETE"})
-
-	router.Handle("/vacation/{vacation_id}/plan", http.HandlerFunc(GetVacationPlanHandler)).Methods("GET")
-	router.Handle("/vacation/{vacation_id}/plan/init", http.HandlerFunc(InitPlanHandler)).Methods("POST")
-	router.Handle("/vacation/{vacation_id}/plan/{plan_id}/save", http.HandlerFunc(SaveActivitiesHandler)).Methods("POST")
 
 	return handlers.CORS(originsOk, headersOk, methodsOk)(router)
 }
