@@ -114,17 +114,6 @@ func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error
 	return true, nil
 }
 
-
-func (backend *MySQLBackend) ReadFromDB(user *model.User) (bool, error) {
-	result := backend.db.Table("Users").Select("email").Find(&user)
-	fmt.Println(user, result)
-	if result.Error != nil {
-		return false, result.Error
-	}
-	if result.RowsAffected !=0 {
-		return true, nil
-}
-
 func (backend *MySQLBackend) GetActivityFromPlanId(plan_id uint32) ([]model.Activity, error) {
 	var activities []model.Activity
 	result := backend.db.Table("Activity").Find(&activities)
@@ -151,15 +140,6 @@ func (backend *MySQLBackend) SaveSites(sites []model.Site) (bool, error) {
 	return true, nil
 }
 
-
-func (backend *MySQLBackend) SaveUser(user *model.User) (bool, error) {
-	fmt.Println(user)
-	result := backend.db.Table("Users").Create(&user)
-	if result.Error != nil {
-		return false, result.Error
-	}
-}
-
 func (backend *MySQLBackend) SaveSingleSite(site model.Site) (bool, error) {
 
 	result := backend.db.Table("Sites").Create(&site)
@@ -177,7 +157,7 @@ func (backend *MySQLBackend) ReadFromDB(user *model.User) (bool, error) {
 	if result.Error != nil {
 		return false, result.Error
 	}
-	if result.RowsAffected !=0 {
+	if result.RowsAffected != 0 {
 		return true, nil
 	}
 	return true, nil
@@ -190,14 +170,4 @@ func (backend *MySQLBackend) SaveUser(user *model.User) (bool, error) {
 		return false, result.Error
 	}
 	return true, nil
-}
-
-func (backend *MySQLBackend) GetActivityFromPlanId(plan_id uint32) ([]model.Activity, error) {
-	var activities []model.Activity
-	result := backend.db.Table("Activity").Find(&activities)
-	fmt.Print(activities, result)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return activities, nil
 }
