@@ -23,16 +23,16 @@ func CheckUser (userEmail string, password string) (bool, error){
  return  false, nil
 }
 
-func AddUser (user *model.User) (bool, error){
-   success, err := backend.DB.SaveUser(user)
-   if !success {
-	fmt.Println("Failed to save in db")
-	return false, err
-   }
+// func AddUser (user *model.User) (bool, error){
+//    success, err := backend.DB.SaveUser(user)
+//    if !success {
+// 	fmt.Println("Failed to save in db")
+// 	return false, err
+//    }
 
-   return true, nil
+//    return true, nil
 
-}
+// }
 
 func CheckUserInfo (userID  uint32) (*model.User, error){
      user, err := backend.DB.ReadUserById(userID)

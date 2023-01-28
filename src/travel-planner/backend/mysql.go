@@ -54,14 +54,14 @@ func (backend *MySQLBackend) ReadUserByEmail(userEmail string) (*model.User, err
 	
 	return nil, errors.New("The email has not been registed before")
 }
-func (backend *MySQLBackend) SaveUser (user *model.User) (bool, error) {
-	result := backend.db.Table("Users").Create(&user)
-	if err := result.Error; err != nil{
-		return false, err
-	}
-	fmt.Println("User saved in db")
-	return true, nil
-}
+// func (backend *MySQLBackend) SaveUser (user *model.User) (bool, error) {
+// 	result := backend.db.Table("Users").Create(&user)
+// 	if err := result.Error; err != nil{
+// 		return false, err
+// 	}
+// 	fmt.Println("User saved in db")
+// 	return true, nil
+// }
 
 func (backend *MySQLBackend) ReadUserById (userId uint32)(*model.User, error){
 	var user model.User

@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"regexp"
+	//"regexp"
 	"strconv"
 	"travel-planner/model"
 
 	"time"
 
-	"travel-planner/backend"
+	//"travel-planner/backend"
 	"travel-planner/service"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gorilla/mux"
-	"github.com/google/uuid"
+	//"github.com/google/uuid"
 )
 
 func SigninHandler(w http.ResponseWriter, r *http.Request){
@@ -69,51 +69,51 @@ func SigninHandler(w http.ResponseWriter, r *http.Request){
 
 }
 
-func SignupHandlerer(w http.ResponseWriter, r *http.Request){
-   fmt.Println("Received a signup request")
-   w.Header().Set("Content-Type","application/json")
+// func SignupHandlerer(w http.ResponseWriter, r *http.Request){
+//    fmt.Println("Received a signup request")
+//    w.Header().Set("Content-Type","application/json")
    
-   decoder := json.NewDecoder(r.Body)
+//    decoder := json.NewDecoder(r.Body)
 
-   var user model.User
+//    var user model.User
 
-   if err := decoder.Decode(&user); err != nil{
-	http.Error(w, "Cannot decode user data from client", http.StatusBadRequest)
-	fmt.Printf("Cannot decode user data from client %v\n", err)
-	return
-   }
+//    if err := decoder.Decode(&user); err != nil{
+// 	http.Error(w, "Cannot decode user data from client", http.StatusBadRequest)
+// 	fmt.Printf("Cannot decode user data from client %v\n", err)
+// 	return
+//    }
 
-   if user.Email == "" || user.Password == "" || regexp.MustCompile(`^[a-z0-9.@]$`).MatchString(user.Email){
-     http.Error(w,"Invalid email address or password", http.StatusBadRequest)
-	 fmt.Printf("Invalid email address or password\n");
-   }
+//    if user.Email == "" || user.Password == "" || regexp.MustCompile(`^[a-z0-9.@]$`).MatchString(user.Email){
+//      http.Error(w,"Invalid email address or password", http.StatusBadRequest)
+// 	 fmt.Printf("Invalid email address or password\n");
+//    }
    
-   user.Id = uuid.New().ID()
-   // check if the user already existed
-   userFound, _ := backend.DB.ReadUserByEmail(user.Email)
+//    user.Id = uuid.New().ID()
+//    // check if the user already existed
+//    userFound, _ := backend.DB.ReadUserByEmail(user.Email)
 
-  if userFound != nil {
-	http.Error(w, "The user has been registered before", http.StatusBadRequest)
-	fmt.Println("The user has been registered before")
-    return
-  }
+//   if userFound != nil {
+// 	http.Error(w, "The user has been registered before", http.StatusBadRequest)
+// 	fmt.Println("The user has been registered before")
+//     return
+//   }
 
-  success, err := service.AddUser(&user)
+//   success, err := service.AddUser(&user)
 
-  if err != nil {
-	http.Error(w, "Failed to save user to database", http.StatusInternalServerError)
-	fmt.Printf("Failed to save to databse %v\n", err)
-	return 
-  }
+//   if err != nil {
+// 	http.Error(w, "Failed to save user to database", http.StatusInternalServerError)
+// 	fmt.Printf("Failed to save to databse %v\n", err)
+// 	return 
+//   }
 
-  if !success {
-	 http.Error(w, "User already exists", http.StatusBadRequest)
-        fmt.Println("User already exists")
-        return
-  }
+//   if !success {
+// 	 http.Error(w, "User already exists", http.StatusBadRequest)
+//         fmt.Println("User already exists")
+//         return
+//   }
 
-   fmt.Printf("User added successfully: %s.\n", user.Email)
-}
+//    fmt.Printf("User added successfully: %s.\n", user.Email)
+// }
 
 ////? 传送*user可？
 func GetUserHandler(w http.ResponseWriter, r *http.Request){
