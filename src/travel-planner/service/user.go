@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"travel-planner/backend"
 	"travel-planner/model"
+	"travel-planner/util/errors"
 
 	//"travel-planner/constants"
 	// "errors"
 	//"golang.org/x/tools/go/analysis/passes/nilness"
-	"travel-planner/util/errors"
 )
 
 func CheckUser(userEmail string, password string) (bool, error) {
@@ -53,7 +53,7 @@ func CreateUser(user *model.User) (bool, *errors.RestErr) {
 	// username existed?
 	success, err := backend.DB.ReadFromDB(user)
 	if err != nil {
-		return false, errors.NewBadRequestError("The database error")
+		return false, errors.NewBadRequestError("The database has error")
 	}
 	if !success {
 		return false, errors.NewBadRequestError("The user has already exist")

@@ -4,19 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	//"regexp"
-	"strconv"
-	"travel-planner/model"
-
 	"time"
+	"regexp"
+	"strconv"
 
+	"travel-planner/model"
 	//"travel-planner/backend"
 	"travel-planner/service"
+	"travel-planner/util/errors"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gorilla/mux"
+
 	//"github.com/google/uuid"
+
+	"github.com/google/uuid"
 )
 
 func SigninHandler(w http.ResponseWriter, r *http.Request) {
@@ -86,8 +88,8 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to read user info from backend", http.StatusInternalServerError)
 		return
 	}
-	//? 传送*user可？
-	js, err := json.Marshal(user)
+
+	js, _ := json.Marshal(user)
 
 	if err != nil {
 		http.Error(w, "Failed to parse User into JSON format", http.StatusInternalServerError)
@@ -137,21 +139,35 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 	if err := decoder.Decode(&user); err != nil {
 		err := errors.NewBadRequestError("Cannot decode user data from client")
-	  fmt.Printf("Cannot decode user data from client %v\n", err)
+		fmt.Printf("Cannot decode user data from client %v\n", err)
 	}
-	if err := user.Validate(); err != nil {
-		return
+	// if err := user.Validate(); err != nil {
+	// 	return
+	// }
+
+	if user.Email == "" {
+		errors.NewBadRequestError("Invalid email address")
 	}
+	if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
+		errors.NewBadRequestError("Invalid username")
+	}
+	if user.Password == "" {
+		errors.NewBadRequestError("Invalid password")
+	}
+
+	user.Id = uuid.New().ID()
+
+	fmt.Println(user)
 	success, err := service.CreateUser(&user)
 	if err != nil {
-		err := errors.NewInternalServerError("Failed to save user to Elasticsearch")
-		fmt.Printf("Failed to save user to Elasticsearch %v\n", err)
-    return
+		err := errors.NewInternalServerError("Failed to save user to DB")
+		fmt.Printf("Failed to save user to DB %v\n", err)
+		return
 	}
 	if !success {
 		errors.NewBadRequestError("User already exists")
 		fmt.Println("User already exists")
-    return
+		return
 	}
 	fmt.Printf("User added successfully: %s.\n", user.Username)
 }
