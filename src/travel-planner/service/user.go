@@ -9,7 +9,6 @@ import (
 	//"travel-planner/constants"
 	// "errors"
 	//"golang.org/x/tools/go/analysis/passes/nilness"
-	"travel-planner/util/errors"
 )
 
 func CheckUser(userEmail string, password string) (bool, error) {
