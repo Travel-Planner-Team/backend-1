@@ -36,8 +36,9 @@ func SearchDetailFromTrip(sites []model.Site) {
 		resBytes := []byte(res) // Converting the string "res" into byte array
 		var jsonRes map[string]interface{} // declaring a map for key names as string and values as interface 
         _ = json.Unmarshal(resBytes, &jsonRes) // Unmarshalling
-
+        if jsonRes["description"] != nil{
         item.Description = jsonRes["description"].(string)
+		}
 		if jsonRes["phone"] != nil{
           item.Phone_number = jsonRes["phone"].(string)
 		}
