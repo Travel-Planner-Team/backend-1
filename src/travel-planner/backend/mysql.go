@@ -5,6 +5,7 @@ import (
 	"travel-planner/constants"
 	"travel-planner/model"
 	"travel-planner/util"
+	//"travel_planner/handler"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -148,4 +149,19 @@ func (backend *MySQLBackend) SaveSingleSite(site model.Site)(bool, error){
 	   }
 	  
 	return true, nil
+}
+
+func (backend *MySQLBackend) AddVacationIdToSite(siteID uint32, vacationID string)(bool, error){
+	var site model.Site
+	result := backend.db.Table("Sites").First(&site, siteID)
+
+	if result.Error != nil{
+		fmt.Printf("error for update in db %v\n",result.Error)
+		return false, result.Error
+	}
+	fmt.Printf("siteID:%v\n", siteID)
+	fmt.Printf("vacationID:%v\n", vacationID)
+    backend.db.Table("Sites").Model(&site).Select("vacation_id").Updates(model.Site{Vacation_id: vacationID})
+
+    return true, nil
 }

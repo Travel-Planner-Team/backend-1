@@ -11,12 +11,13 @@ import (
 
 	//"time"
 
-	//"travel-planner/backend"
+	"travel-planner/backend"
 	"travel-planner/service"
 
 	//"github.com/form3tech-oss/jwt-go"
-	//"github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 	//"github.com/pborman/uuid"
+	"strconv"
 )
 
 func exampleHandler(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +100,7 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request){
 	var sites []model.Site;
 	sites, err := service.SearchSites(interest, city);
 
+
 	if err != nil {
 	http.Error(w, "Failed to search sites", http.StatusInternalServerError)
        return
@@ -114,6 +116,39 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request){
    w.Write(js)
 }
 
+func addSiteHandler(w http.ResponseWriter, r *http.Request) {
+   fmt.Println("Received one checkout request")
+   w.Header().Set("Content-Type", "application/json")
+   if r.Method == "OPTIONS" {
+       return
+   }
+
+   siteID := mux.Vars(r)["id"]
+   vacationID := mux.Vars(r)["vacation_id"]
+  fmt.Printf("siteid: %v\n", siteID)
+  fmt.Printf("vacationid: %v\n", vacationID)
+
+   //userFound, _ := backend.DB.ReadUserByEmail(user.Email)
+   
+  intId ,_:=strconv.ParseInt(siteID, 0, 64)
+  fmt.Printf("intId : %v\n", intId)
+  pasedId := uint32(intId)
+  
+   success, err := backend.DB.AddVacationIdToSite(pasedId, vacationID)
+   if err != nil {
+       fmt.Println("Add LocationId to site failed.")
+       w.Write([]byte(err.Error()))
+       return
+   }
+
+   if !success {
+		http.Error(w, "Failed to update LocationId to site",http.StatusInternalServerError)
+		fmt.Printf("Failed to update LocationId to site %v\n ", err)
+	}
+
+	fmt.Println("LocationId updated successfully")
+	fmt.Fprintf(w, "Update request received %s\n", siteID)
+}
 
 
 
