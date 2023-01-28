@@ -4,55 +4,63 @@ import (
 	"fmt"
 	"travel-planner/backend"
 	"travel-planner/model"
-
+	"travel-planner/util/errors"
 	//"travel-planner/constants"
-	"errors"
-
+	// "errors"
 	//"golang.org/x/tools/go/analysis/passes/nilness"
 )
 
-func CheckUser (userEmail string, password string) (bool, error){
- user, err := backend.DB.ReadUserByEmail(userEmail);
+func CreateUser(user *model.User) (bool, *errors.RestErr) {
+	// username existed?
+	success, err := backend.DB.ReadFromDB(user)
+	if err != nil {
+		return false, errors.NewBadRequestError("The database has error")
+	}
+	if !success {
+		return false, errors.NewBadRequestError("The user has already exist")
+	}
 
- if err != nil {
-	return false, err
- }
- if user.Password == password {
-	return true, nil
- }
- return  false, nil
+	// save to db
+
+	success,err = backend.DB.SaveUser(user)
+	if err != nil {
+		return false, errors.NewInternalServerError("Failed to create user")
+	}
+	// fmt.Printf("User is added: %s\n", user.Username)
+  return true, nil
 }
 
-// func AddUser (user *model.User) (bool, error){
-//    success, err := backend.DB.SaveUser(user)
-//    if !success {
-// 	fmt.Println("Failed to save in db")
-// 	return false, err
-//    }
+func CheckUser(userEmail string, password string) (bool, error) {
+	user, err := backend.DB.ReadUserByEmail(userEmail)
 
-//    return true, nil
+	if err != nil {
+		return false, err
+	}
+	if user.Password == password {
+		return true, nil
+	}
+	return false, nil
+}
 
-// }
+func CheckUserInfo(userID uint32) (*model.User, *errors.RestErr) {
+	user, err := backend.DB.ReadUserById(userID)
+	if err != nil {
+		return nil, errors.NewInternalServerError("Failed to load user")
+	}
 
-func CheckUserInfo (userID  uint32) (*model.User, error){
-     user, err := backend.DB.ReadUserById(userID)
-	 if err != nil {
-		return nil, err
-	 }
+	if user == nil {
+		return nil, errors.NewBadRequestError("unable to find app in db")
+	}
 
-	 if user == nil{
-		return nil, errors.New("unable to find app in db")
-	 }
-
-	 return user, nil
+	return user, nil
 
 }
 
-func UpdateUserInfo(id uint32, password, username, gender string, age int64)(bool, error){
+func UpdateUserInfo(id uint32, password, username, gender string, age int64) (bool, error) {
 	fmt.Println("updateuser")
-	
-    success, err := backend.DB.UpdateInfo(id, password, username,gender, age)
-	
+
+	success, err := backend.DB.UpdateInfo(id, password, username, gender, age)
+
 	if err != nil {
 		return false, err
 	}

@@ -7,9 +7,10 @@ import (
 	"travel-planner/util"
 	//"travel_planner/handler"
 
+	"errors"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"errors"
 )
 
 var (
@@ -45,26 +46,18 @@ func (backend *MySQLBackend) ExampleQueryFunc() error {
 
 func (backend *MySQLBackend) ReadUserByEmail(userEmail string) (*model.User, error) {
 	var user model.User
-	result := backend.db.Table("Users").Where("email = ?",userEmail).Find(&user)
+	result := backend.db.Table("Users").Where("email = ?", userEmail).Find(&user)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
 	if result.RowsAffected != 0 {
 		return &user, nil
 	}
-	
-	return nil, errors.New("The email has not been registed before")
-}
-// func (backend *MySQLBackend) SaveUser (user *model.User) (bool, error) {
-// 	result := backend.db.Table("Users").Create(&user)
-// 	if err := result.Error; err != nil{
-// 		return false, err
-// 	}
-// 	fmt.Println("User saved in db")
-// 	return true, nil
-// }
 
-func (backend *MySQLBackend) ReadUserById (userId uint32)(*model.User, error){
+	return nil, errors.New("The email has not been registed before.")
+}
+
+func (backend *MySQLBackend) ReadUserById(userId uint32) (*model.User, error) {
 	var user model.User
 	result := backend.db.Table("Users").First(&user, userId)
 	if err := result.Error; err != nil {
@@ -72,38 +65,37 @@ func (backend *MySQLBackend) ReadUserById (userId uint32)(*model.User, error){
 	}
 	return &user, nil
 }
+
 // update interface has no return value in gorm?
-func (backend *MySQLBackend) UpdateInfo (id uint32, password, username,gender string, age int64)(bool, error){
+func (backend *MySQLBackend) UpdateInfo(id uint32, password, username, gender string, age int64) (bool, error) {
 	var user model.User
 	result := backend.db.Table("Users").First(&user, id)
 
-	if result.Error != nil{
-		fmt.Printf("error for update in db %v\n",result.Error)
+	if result.Error != nil {
+		fmt.Printf("error for update in db %v\n", result.Error)
 		return false, result.Error
 	}
 	fmt.Printf("userID:%v\n", user.Id)
 	fmt.Println(age)
-    backend.db.Table("Users").Model(&user).Select("Password", "Username","Gender", "Age").
-	Updates(model.User{Password: password, Username: username, Gender: gender, Age:age})
-	fmt.Printf("usersAge:%v\n",user.Age)
-    return true, nil
+	backend.db.Table("Users").Model(&user).Select("Password", "Username", "Gender", "Age").
+		Updates(model.User{Password: password, Username: username, Gender: gender, Age: age})
+	fmt.Printf("usersAge:%v\n", user.Age)
+	return true, nil
 }
 
-
-func (backend *MySQLBackend) GetSitesInVacation (vacationId uint32) ([]model.Site, error){
+func (backend *MySQLBackend) GetSitesInVacation(vacationId uint32) ([]model.Site, error) {
 	var sites []model.Site
-    result := backend.db.Table("Sites").Where("vacation_id = ?",vacationId).Find(&sites)
-	if result.Error != nil{
+	result := backend.db.Table("Sites").Where("vacation_id = ?", vacationId).Find(&sites)
+	if result.Error != nil {
 		fmt.Println("Failed to get sites from db")
-		return  nil, result.Error
+		return nil, result.Error
 	}
-    if result.RowsAffected == 0{
+	if result.RowsAffected == 0 {
 		fmt.Printf("No sites record in vacation %v\n", vacationId)
-      return nil, nil
+		return nil, nil
 	}
-	return sites,nil
+	return sites, nil
 }
-
 
 func (backend *MySQLBackend) GetVacations() ([]model.Vacation, error) {
 	var vacations []model.Vacation
@@ -123,31 +115,61 @@ func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error
 	return true, nil
 }
 
-func (backend *MySQLBackend) SaveSites(sites []model.Site)(bool, error){
+func (backend *MySQLBackend) GetActivityFromPlanId(plan_id uint32) ([]model.Activity, error) {
+	var activities []model.Activity
+	result := backend.db.Table("Activity").Find(&activities)
+	fmt.Print(activities, result)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return activities, nil
+}
+
+func (backend *MySQLBackend) SaveSites(sites []model.Site) (bool, error) {
 	var count = 0
 	for _, item := range sites {
-       result :=backend.db.Table("Sites").Create(&item)
+		result := backend.db.Table("Sites").Create(&item)
 
-	   if result.Error !=nil || result.RowsAffected == 0 {
-		fmt.Printf("Faild to save site %v\n",item.Site_name)
-	   }
-	   count++
+		if result.Error != nil || result.RowsAffected == 0 {
+			fmt.Printf("Faild to save site %v\n", item.Site_name)
+		}
+		count++
 	}
-	if count == 0{
+	if count == 0 {
 		return false, errors.New("Failed to save all the sites")
 	}
 	return true, nil
 }
 
-func (backend *MySQLBackend) SaveSingleSite(site model.Site)(bool, error){
+func (backend *MySQLBackend) SaveSingleSite(site model.Site) (bool, error) {
 
-	
-       result :=backend.db.Table("Sites").Create(&site)
+	result := backend.db.Table("Sites").Create(&site)
 
-	   if result.Error !=nil || result.RowsAffected == 0 {
-		fmt.Printf("Faild to save site %v\n",site.Site_name)
-	   }
-	  
+	if result.Error != nil || result.RowsAffected == 0 {
+		fmt.Printf("Faild to save site %v\n", site.Site_name)
+	}
+
+	return true, nil
+}
+
+func (backend *MySQLBackend) ReadFromDB(user *model.User) (bool, error) {
+	result := backend.db.Table("Users").Select("email").Find(&user)
+	fmt.Println(user, result)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if result.RowsAffected != 0 {
+		return true, nil
+	}
+	return true, nil
+}
+
+func (backend *MySQLBackend) SaveUser(user *model.User) (bool, error) {
+	fmt.Println(user)
+	result := backend.db.Table("Users").Create(&user)
+	if result.Error != nil {
+		return false, result.Error
+	}
 	return true, nil
 }
 

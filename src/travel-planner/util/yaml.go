@@ -6,9 +6,11 @@ import (
 
 	"gopkg.in/yaml.v2"
 )
+
 type ChatGPTConfig struct {
-   Key string `yaml:"key"`
+	Key string `yaml:"key"`
 }
+
 type MySQLInfo struct {
 	Endpoint string `yaml:"endpoint"`
 	Username string `yaml:"username"`
@@ -20,11 +22,10 @@ type TokenInfo struct {
 }
 
 type ApplicationConfig struct {
-	MySQLConfig *MySQLInfo `yaml:"mysql"`
-	TokenConfig *TokenInfo `yaml:"token"`
+	MySQLConfig   *MySQLInfo     `yaml:"mysql"`
+	TokenConfig   *TokenInfo     `yaml:"token"`
 	ChatGPTConfig *ChatGPTConfig `yaml:"chatGPT"`
 }
-
 
 func LoadApplicationConfig(configDir, configFile string) (*ApplicationConfig, error) {
 	content, err := ioutil.ReadFile(filepath.Join(configDir, configFile))
