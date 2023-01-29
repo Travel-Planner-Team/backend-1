@@ -1,2 +1,3 @@
 src/travel-planner/backend/conf/chatGPT.yml
-*.yml
+src/travel-planner/conf/chatGPT.yml
+.vscode/*
