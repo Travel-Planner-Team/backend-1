@@ -28,7 +28,7 @@ type UserStub struct {
 }
 
 type Vacation struct {
-	Id           uint32    `json:"id"`
+	Id           string    `json:"id"`
 	Destination  string    `json:"destination"`
 	StartDate    time.Time `json:"start_date"`
 	EndDate      time.Time `json:"end_date"`
@@ -103,6 +103,11 @@ type Transportaion struct {
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
 	Date      time.Time `json:"date"`
+}
+
+type SavePlanRequestBody struct {
+	ActivityInfoList       []Activity      `json:"activity_info_list"`
+	TransportationInfoList []Transportaion `json:"transportation_info_list"`
 }
 
 func (user *User) Validate() *errors.RestErr {

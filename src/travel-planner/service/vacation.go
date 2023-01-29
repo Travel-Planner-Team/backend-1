@@ -33,5 +33,19 @@ func GetActivitiesInfoFromPlanId(plan_id uint32) ([]model.Activity, error) {
 		return nil, errors.New("empty or invalid vacations, check the Database")
 	}
 	return activities, nil
+}
 
+func GetRoutesFromSites(sites []uint32) (int32, []model.Activity, []model.Transportaion) {
+	return backend.DB.GetRoutes(sites)
+	
+}
+
+func SaveVacationPlan(plan model.Plan) error {
+	err := backend.DB.SaveVacationPlanToSQL(plan)
+	return err
+}
+
+func SavePlanInfo(planInfo model.SavePlanRequestBody) error {
+	err := backend.DB.SavePlanInfoToSQL(planInfo)
+	return err
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"travel-planner/util"
 
@@ -19,6 +20,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			fmt.Println(string(mySigningKey))
 			return []byte(mySigningKey), nil
 		},
 		SigningMethod: jwt.SigningMethodHS256,
@@ -41,6 +43,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	router.Handle("/vacation/{vacation_id}/plan", jwtMiddleware.Handler(http.HandlerFunc(GetVacationPlanHandler))).Methods("GET")
 	router.Handle("/vacation/{vacation_id}/plan/init", jwtMiddleware.Handler(http.HandlerFunc(InitPlanHandler))).Methods("POST")
 	router.Handle("/vacation/{vacation_id}/plan/{plan_id}/save", jwtMiddleware.Handler(http.HandlerFunc(SaveActivitiesHandler))).Methods("POST")
+  router.Handle("/vacation/{vacation_id}/plan/routes", jwtMiddleware.Handler(http.HandlerFunc(GetRouteForVacation))).Methods("GET")
 
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})
