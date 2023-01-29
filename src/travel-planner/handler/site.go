@@ -3,20 +3,14 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-
 	"net/http"
-	//"regexp"
-	//"strconv"
-	"travel-planner/model"
-
-	//"time"
+	"strconv"
 
 	"travel-planner/backend"
+	"travel-planner/model"
 	"travel-planner/service"
-	//"github.com/form3tech-oss/jwt-go"
+
 	"github.com/gorilla/mux"
-	//"github.com/pborman/uuid"
-	"strconv"
 )
 
 func GetSitesHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,16 +44,12 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//line 93 is hardcode for test, we cannot get info from http yet, we should use line65
-	//vacationId := mux.Vars(r)["vacationid"]
+	// vacationId := mux.Vars(r)["vacationid"]
 	city := r.URL.Query().Get("city")
 	interest := r.URL.Query().Get("interest")
 
-	// interest := "Museum"
-	// city := "New York"
-
 	var sites []model.Site
 	sites, err := service.SearchSites(interest, city)
-
 
 	if err != nil {
 		http.Error(w, "Failed to search sites", http.StatusInternalServerError)
@@ -77,35 +67,34 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addSiteHandler(w http.ResponseWriter, r *http.Request) {
-   fmt.Println("Received one checkout request")
-   w.Header().Set("Content-Type", "application/json")
-   if r.Method == "OPTIONS" {
-       return
-   }
+	fmt.Println("Received one checkout request")
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" {
+		return
+	}
 
-   siteID := mux.Vars(r)["id"]
-   vacationID := mux.Vars(r)["vacation_id"]
-  fmt.Printf("siteid: %v\n", siteID)
-  fmt.Printf("vacationid: %v\n", vacationID)
+	siteId := mux.Vars(r)["id"]
+	vacationId := mux.Vars(r)["vacation_id"]
+	fmt.Printf("siteid: %v\n", siteId)
+	fmt.Printf("vacationid: %v\n", vacationId)
 
-   //userFound, _ := backend.DB.ReadUserByEmail(user.Email)
-   
-  intId ,_:=strconv.ParseInt(siteID, 0, 64)
-  fmt.Printf("intId : %v\n", intId)
-  pasedId := uint32(intId)
-  
-   success, err := backend.DB.AddVacationIdToSite(pasedId, vacationID)
-   if err != nil {
-       fmt.Println("Add LocationId to site failed.")
-       w.Write([]byte(err.Error()))
-       return
-   }
+	siteIdInt, _ := strconv.ParseInt(siteId, 0, 64)
+	parsedSiteId := uint32(siteIdInt)
+	vacationIdInt, _ := strconv.ParseInt(vacationId, 0, 64)
+	parsedVacationId := uint32(vacationIdInt)
 
-   if !success {
-		http.Error(w, "Failed to update LocationId to site",http.StatusInternalServerError)
+	success, err := backend.DB.AddVacationIdToSite(parsedSiteId, parsedVacationId)
+	if err != nil {
+		fmt.Println("Add LocationId to site failed.")
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	if !success {
+		http.Error(w, "Failed to update LocationId to site", http.StatusInternalServerError)
 		fmt.Printf("Failed to update LocationId to site %v\n ", err)
 	}
 
 	fmt.Println("LocationId updated successfully")
-	fmt.Fprintf(w, "Update request received %s\n", siteID)
+	fmt.Fprintf(w, "Update request received %s\n", siteId)
 }

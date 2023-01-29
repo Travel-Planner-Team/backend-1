@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
-  "time"
-  "strconv"
-  
+	"strconv"
+	"time"
+
 	"travel-planner/model"
 	"travel-planner/service"
 	"travel-planner/util/errors"
@@ -26,7 +26,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 	if err := decoder.Decode(&user); err != nil {
 		err := errors.NewBadRequestError("Cannot decode user data from client")
-	  fmt.Printf("Cannot decode user data from client %v\n", err)
+		fmt.Printf("Cannot decode user data from client %v\n", err)
 	}
 	// if err := user.Validate(); err != nil {
 	// 	return
@@ -36,21 +36,21 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		errors.NewBadRequestError("Invalid email address")
 	}
 	if user.Username == "" || regexp.MustCompile(`^[a-z0-9]$`).MatchString(user.Username) {
-    errors.NewBadRequestError("Invalid username")
-  }
+		errors.NewBadRequestError("Invalid username")
+	}
 	if user.Password == "" {
-    errors.NewBadRequestError("Invalid password")
-  }
+		errors.NewBadRequestError("Invalid password")
+	}
 
-	user.Id = uuid.New().ID();
+	user.Id = uuid.New().ID()
 
-  fmt.Println(user)
+	fmt.Println(user)
 
 	success, err := service.CreateUser(&user)
 	if err != nil {
 		err := errors.NewInternalServerError("Failed to save user to DB")
 		fmt.Printf("Failed to save user to DB %v\n", err)
-    return
+		return
 	}
 	if !success {
 		errors.NewBadRequestError("User already exists")
@@ -91,10 +91,12 @@ func SigninHandler(w http.ResponseWriter, r *http.Request) {
 		"email": user.Email,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	})
+
 	// sign and get the complete encoded token as a string using the secret
 	if token == nil {
 		fmt.Print("faild to get token")
 	}
+
 	fmt.Printf("token : %v\n", token)
 	fmt.Printf("mySigningKey : %v\n", mySigningKey)
 

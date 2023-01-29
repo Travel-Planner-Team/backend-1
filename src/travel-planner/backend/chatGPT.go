@@ -5,14 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	//"regexp"
-
 	"travel-planner/model"
 	"travel-planner/util"
 
 	"github.com/google/uuid"
 	gogpt "github.com/sashabaranov/go-gpt3"
-	//https://pkg.go.dev/github.com/aknuds1/go-gpt3
 )
 
 func SearchSitesInChatGPT(query string) ([]model.Site, error) {
@@ -51,7 +48,7 @@ func SearchSitesInChatGPT(query string) ([]model.Site, error) {
 			i := strings.Index(item, ".")
 			item_clean := item[i+2:]
 			var site model.Site
-			site.Site_name = item_clean
+			site.SiteName = item_clean
 			site.Id = uuid.New().ID()
 			sites = append(sites, site)
 		}
@@ -67,7 +64,7 @@ func ReadSitesFromChatGPT(resp gogpt.CompletionResponse) ([]model.Site, error) {
 	choices := resp.Choices
 	for _, item := range choices {
 		var site model.Site
-		site.Site_name = item.Text
+		site.SiteName = item.Text
 		site.Id = uuid.New().ID()
 		sites = append(sites, site)
 	}

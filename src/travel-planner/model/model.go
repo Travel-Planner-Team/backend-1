@@ -36,12 +36,6 @@ type Vacation struct {
 	UserId       uint32    `json:"user_id"`
 }
 
-//	type Model struct {
-//		ID uint `jason:"id"` // `gorm:"primary_key jason:"id"`
-//		CreatedAt   time.Time  `json:"created_at"`
-//		UpdatedAt   time.Time  `json:"updated_at"`
-//		DeletedAt   *time.Time `json:"deleted_at"`
-//	}
 type User struct {
 	Id       uint32 `json:"id"`
 	Email    string `json:"email"`
@@ -52,46 +46,46 @@ type User struct {
 }
 
 type Site struct {
-	Id           uint32 `json:"id"`
-	Site_name    string `json:"site_name"`
-	Rating       string `json:"rating"`
-	Phone_number string `json:"phone_number"`
-	Vacation_id  string `json:"vacation_id"`
-	Description  string `json:"description"`
-	Address      string `json:"address"`
+	Id          uint32 `json:"id"`
+	SiteName    string `json:"site_name"`
+	Rating      string `json:"rating"`
+	PhoneNumber string `json:"phone_number"`
+	VacationId  uint32 `json:"vacation_id"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
 }
 
 type TripSite struct {
-	Location_id string      `json:"location_id"`
-	Name        string      `json:"name"`
-	Address_obj Address_obj `json:"address_obj"`
+	LocationId string     `json:"location_id"`
+	Name       string     `json:"name"`
+	Address    AddressObj `json:"address_obj"`
 }
 
-type Address_obj struct {
-	Street1        string `json:"street1"`
-	Street2        string `json:"street2"`
-	City           string `json:"city"`
-	State          string `json:"state"`
-	Country        string `json:"country"`
-	Postalcode     string `json:"postalcode"`
-	Address_string string `json:"address_string"`
+type AddressObj struct {
+	Street1       string `json:"street1"`
+	Street2       string `json:"street2"`
+	City          string `json:"city"`
+	State         string `json:"state"`
+	Country       string `json:"country"`
+	Postalcode    string `json:"postalcode"`
+	AddressString string `json:"address_string"`
 }
 
 type TripDetails struct {
-	Location_id    string `json:"location_id"`
-	Name           string `json:"name"`
-	Description    string `json:"description"`
-	Web_url        string `json:"web_url"`
-	Address_string string `json:"address_string"`
-	Rating         string `json:"rating"`
-	Phone          string `json:"phone"`
+	LocationId    string `json:"location_id"`
+	Name          string `json:"name"`
+	Description   string `json:"description"`
+	WebUrl        string `json:"web_url"`
+	AddressString string `json:"address_string"`
+	Rating        string `json:"rating"`
+	Phone         string `json:"phone"`
 }
 
 type Plan struct {
-	Id          uint32    `json:"id"`
-	Start_date  time.Time `json:"start_date"`
-	Duration    int64     `json:"duration"`
-	Vacation_id uint32    `json:"vacation_id"`
+	Id         uint32    `json:"id"`
+	StartDate  time.Time `json:"start_date"`
+	Duration   int64     `json:"duration"`
+	VacationId uint32    `json:"vacation_id"`
 }
 
 type Activity struct {
@@ -100,7 +94,7 @@ type Activity struct {
 	EndTime   time.Time `json:"end_time"`
 	Date      time.Time `json:"date"`
 	Duration  int64     `json:"duration"`
-	Site_id   uint32    `json:"site_id"`
+	SiteId    uint32    `json:"site_id"`
 }
 
 type Transportaion struct {
@@ -110,7 +104,6 @@ type Transportaion struct {
 	EndTime   time.Time `json:"end_time"`
 	Date      time.Time `json:"date"`
 }
-
 
 func (user *User) Validate() *errors.RestErr {
 	user.Username = strings.TrimSpace(user.Username)

@@ -35,5 +35,3 @@ func GetActivitiesInfoFromPlanId(plan_id uint32) ([]model.Activity, error) {
 	return activities, nil
 
 }
-
-
