@@ -41,9 +41,9 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	router.Handle("/vacation/init", jwtMiddleware.Handler(http.HandlerFunc(SaveVacationsHandler))).Methods("POST")
 
 	router.Handle("/vacation/{vacation_id}/plan", jwtMiddleware.Handler(http.HandlerFunc(GetVacationPlanHandler))).Methods("GET")
-	router.Handle("/vacation/{vacation_id}/plan/init", jwtMiddleware.Handler(http.HandlerFunc(InitPlanHandler))).Methods("POST")
-	router.Handle("/vacation/{vacation_id}/plan/{plan_id}/save", jwtMiddleware.Handler(http.HandlerFunc(SaveActivitiesHandler))).Methods("POST")
-  router.Handle("/vacation/{vacation_id}/plan/routes", jwtMiddleware.Handler(http.HandlerFunc(GetRouteForVacation))).Methods("GET")
+	router.Handle("/vacation/{vacation_id}/plan/init", jwtMiddleware.Handler(http.HandlerFunc(InitVacationPlanHandler))).Methods("POST")
+	router.Handle("/vacation/{vacation_id}/plan/{plan_id}/save", jwtMiddleware.Handler(http.HandlerFunc(SavePlanInfoHandler))).Methods("POST")
+	router.Handle("/vacation/{vacation_id}/plan/routes", jwtMiddleware.Handler(http.HandlerFunc(GetRouteForVacation))).Methods("GET")
 
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})

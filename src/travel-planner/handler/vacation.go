@@ -97,7 +97,7 @@ func InitVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// newPlan.Id = uuid.New()
-	newPlan.Id = newPlan.Vacation_id
+	newPlan.Id = newPlan.VacationId
 
 	// Write the JSON data to the response
 	jsonData, err := json.Marshal(newPlan)
