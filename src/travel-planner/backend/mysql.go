@@ -5,6 +5,7 @@ import (
 	"travel-planner/constants"
 	"travel-planner/model"
 	"travel-planner/util"
+
 	//"travel_planner/handler"
 
 	"errors"
@@ -54,7 +55,7 @@ func (backend *MySQLBackend) ReadUserByEmail(userEmail string) (*model.User, err
 		return &user, nil
 	}
 
-	return nil, errors.New("The email has not been registed before.")
+	return nil, errors.New("the email has not been registed before")
 }
 
 func (backend *MySQLBackend) ReadUserById(userId uint32) (*model.User, error) {
@@ -107,6 +108,22 @@ func (backend *MySQLBackend) GetVacations() ([]model.Vacation, error) {
 	return vacations, nil
 }
 
+func (backend *MySQLBackend) GetRoutes(sites []uint32) (int32, []model.Activity, []model.Transportaion) {
+	var activities []model.Activity
+	result := backend.db.Table("Activities").Find(&activities)
+	fmt.Println(activities, result)
+	if result.Error != nil {
+		return -1, nil, nil
+	}
+	var tranportations []model.Transportaion
+	result = backend.db.Table("Transportations").Find(&tranportations)
+	fmt.Println(activities, result)
+	if result.Error != nil {
+		return -1, activities, nil
+	}
+	return 8, activities, tranportations
+}
+
 func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error) {
 	result := backend.db.Table("Vacations").Create(&vacation)
 	if result.Error != nil {
@@ -136,7 +153,7 @@ func (backend *MySQLBackend) SaveSites(sites []model.Site) (bool, error) {
 		count++
 	}
 	if count == 0 {
-		return false, errors.New("Failed to save all the sites")
+		return false, errors.New("failed to save all the sites")
 	}
 	return true, nil
 }
@@ -152,7 +169,8 @@ func (backend *MySQLBackend) SaveSingleSite(site model.Site) (bool, error) {
 	return true, nil
 }
 
-func (backend *MySQLBackend) SaveVacationPlanToSQL(plan model.Plan) (error) {
+func (backend *MySQLBackend) SaveVacationPlanToSQL(plan model.Plan) error {
+	fmt.Println("Saving new plan to SQL")
 	result := backend.db.Table("Plans").Create(&plan)
 	if result.Error != nil || result.RowsAffected == 0 {
 		fmt.Printf("Faild to save plan %v\n", plan.Id)
@@ -160,19 +178,46 @@ func (backend *MySQLBackend) SaveVacationPlanToSQL(plan model.Plan) (error) {
 	return nil
 }
 
-func (backend *MySQLBackend) AddVacationIdToSite(siteID uint32, vacationID string)(bool, error){
+func (backend *MySQLBackend) SavePlanInfoToSQL(planInfo model.SavePlanRequestBody) error {
+	var count = 0
+	for _, activity := range planInfo.ActivityInfoList {
+		result := backend.db.Table("Activities").Create(&activity)
+		if result.Error != nil || result.RowsAffected == 0 {
+			fmt.Printf("Faild to save activities %v\n", activity.Id)
+		}
+		count++
+	}
+	if count == 0 {
+		return errors.New("failed to save all the activities info")
+	}
+
+	for _, transportaion := range planInfo.TransportationInfoList {
+		result := backend.db.Table("Transportations")
+		if result.Error != nil || result.RowsAffected == 0 {
+			fmt.Printf("Faild to save activities %v\n", transportaion.Id)
+		}
+		count++
+	}
+
+	if count == 0 {
+		return errors.New("failed to save all the activities info")
+	}
+	return nil
+}
+
+func (backend *MySQLBackend) AddVacationIdToSite(siteID uint32, vacationID string) (bool, error) {
 	var site model.Site
 	result := backend.db.Table("Sites").First(&site, siteID)
 
-	if result.Error != nil{
-		fmt.Printf("error for update in db %v\n",result.Error)
+	if result.Error != nil {
+		fmt.Printf("error for update in db %v\n", result.Error)
 		return false, result.Error
 	}
 	fmt.Printf("siteID:%v\n", siteID)
 	fmt.Printf("vacationID:%v\n", vacationID)
-    backend.db.Table("Sites").Model(&site).Select("vacation_id").Updates(model.Site{Vacation_id: vacationID})
+	backend.db.Table("Sites").Model(&site).Select("vacation_id").Updates(model.Site{Vacation_id: vacationID})
 
-    return true, nil
+	return true, nil
 }
 
 func (backend *MySQLBackend) ReadFromDB(user *model.User) (bool, error) {

@@ -88,19 +88,20 @@ type TripDetails struct {
 }
 
 type Plan struct {
-	Id         string    `json:"id"`
-	Start_date time.Time `json:"start_date"`
-	Duration_days   int64     `json:"duration_days"`
-	VacationId string    `json:"VacationId"`
+	Id            string    `json:"id"`
+	Start_date    time.Time `json:"start_date"`
+	Duration_days int64     `json:"duration_days"`
+	Vacation_id   string    `json:"vacation_id"`
 }
 
 type Activity struct {
-	Id        uint32    `json:"id"`
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
-	Date      time.Time `json:"date"`
-	Duration  int64     `json:"duration"`
-	Site_id   uint32    `json:"site_id"`
+	Id           uint32 `json:"id"`
+	StartTime    string `json:"start_time"`
+	EndTime      string `json:"end_time"`
+	Date         string `json:"date"`
+	Duration_hrs int64  `json:"duration_hrs"`
+	Site_id      uint32 `json:"site_id"`
+	Plan_id      uint32 `json:"plan_id"`
 }
 
 type Transportaion struct {
@@ -111,6 +112,10 @@ type Transportaion struct {
 	Date      time.Time `json:"date"`
 }
 
+type SavePlanRequestBody struct {
+	ActivityInfoList       []Activity      `json:"activity_info_list"`
+	TransportationInfoList []Transportaion `json:"transportation_info_list"`
+}
 
 func (user *User) Validate() *errors.RestErr {
 	user.Username = strings.TrimSpace(user.Username)
