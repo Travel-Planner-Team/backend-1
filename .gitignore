@@ -2,3 +2,4 @@ src/travel-planner/backend/conf/chatGPT.yml
 src/travel-planner/conf/chatGPT.yml
 .vscode/*
 .DS_store
+*.DS_store
