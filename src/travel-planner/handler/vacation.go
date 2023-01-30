@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"travel-planner/model"
 	"travel-planner/service"
 
@@ -113,7 +114,12 @@ func InitVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// newPlan.Id = uuid.New()
-	newPlan.Id = newPlan.Vacation_id
+	vaID, err := strconv.ParseUint(newPlan.Vacation_id, 10, 16)
+	if err != nil {
+		http.Error(w, "Error decoding request body: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	newPlan.Id = uint32(vaID)
 
 	// Write the JSON data to the response
 	jsonData, err := json.Marshal(newPlan)

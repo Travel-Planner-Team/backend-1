@@ -97,6 +97,21 @@ func (backend *MySQLBackend) GetSitesInVacation(vacationId uint32) ([]model.Site
 	}
 	return sites, nil
 }
+func (backend *MySQLBackend) GetSingleVacation(Id uint32) (*model.Vacation, error) {
+	var vacation model.Vacation
+
+    result := backend.db.Table("Vacations").Where("id = ?",Id).Find(&vacation)
+	fmt.Println(vacation, result)
+	if result.Error != nil{
+		fmt.Println("Failed to get vacation from db")
+		return nil, result.Error
+	}
+	if result.RowsAffected == 0{
+		fmt.Printf("No vacation record in vacation %v\n", Id)
+      return nil, nil
+	}
+	return &vacation, nil
+}
 
 func (backend *MySQLBackend) GetVacations() ([]model.Vacation, error) {
 	var vacations []model.Vacation
@@ -134,7 +149,7 @@ func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error
 
 func (backend *MySQLBackend) GetActivityFromPlanId(plan_id uint32) ([]model.Activity, error) {
 	var activities []model.Activity
-	result := backend.db.Table("Activity").Find(&activities)
+	result := backend.db.Table("Activities").Find(&activities)
 	fmt.Print(activities, result)
 	if result.Error != nil {
 		return nil, result.Error
@@ -238,5 +253,23 @@ func (backend *MySQLBackend) SaveUser(user *model.User) (bool, error) {
 	if result.Error != nil {
 		return false, result.Error
 	}
+	return true, nil
+}
+
+func (backend *MySQLBackend) SaveTransportation (transportation *model.Transportaion) (bool, error) {
+	result := backend.db.Table("Transportations").Create(&transportation)
+	if err := result.Error; err != nil{
+		return false, err
+	}
+	fmt.Println("Transportation saved in db")
+	return true, nil
+}
+
+func (backend *MySQLBackend) SaveActivity (activity *model.Activity) (bool, error) {
+	result := backend.db.Table("Activities").Create(&activity)
+	if err := result.Error; err != nil{
+		return false, err
+	}
+	fmt.Println("Activity saved in db")
 	return true, nil
 }

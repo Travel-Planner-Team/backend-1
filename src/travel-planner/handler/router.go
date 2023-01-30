@@ -47,7 +47,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	router.Handle("/vacation/{vacation_id}/plan", http.HandlerFunc(GetVacationPlanHandler)).Methods("GET")
 	router.Handle("/vacation/{vacation_id}/plan/init", http.HandlerFunc(InitVacationPlanHandler)).Methods("POST")
 	router.Handle("/vacation/{vacation_id}/plan/{plan_id}/save", http.HandlerFunc(SavePlanInfoHandler)).Methods("POST")
-	router.Handle("/vacation/{vacation_id}/plan/routes", http.HandlerFunc(GetRouteForVacation)).Methods("GET")
+	router.Handle("/vacation/{vacation_id}/plan/routes", jwtMiddleware.Handler(http.HandlerFunc(GetPlanHandler))).Methods("GET")
 
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})
