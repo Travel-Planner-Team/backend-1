@@ -53,7 +53,9 @@ type Site struct {
 	VacationId  uint32 `json:"vacation_id"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
-}
+	Latitude    float32 `json:"latitude"`
+	Longitude   float32 `json:"longitude"`
+ }
 
 type TripSite struct {
 	LocationId string     `json:"location_id"`
