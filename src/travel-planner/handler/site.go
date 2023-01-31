@@ -10,6 +10,7 @@ import (
 	"travel-planner/model"
 	"travel-planner/service"
 
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gorilla/mux"
 )
 
@@ -97,4 +98,64 @@ func addSiteHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("LocationId updated successfully")
 	fmt.Fprintf(w, "Update request received %s\n", siteId)
+}
+
+func AddSiteInVacationHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received one checkout request")
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" {
+       return
+   	}
+   	var site model.Site
+
+	vacationID := mux.Vars(r)["vacation_id"]
+  	fmt.Printf("vacationid: %v\n", vacationID)
+    intVacation ,_:=strconv.ParseInt(vacationID, 0, 64)
+  
+  	pasedVacation := uint32(intVacation)
+
+ 	// get site id
+  	siteID := mux.Vars(r)["id"]
+  	intId ,_:=strconv.ParseInt(siteID, 0, 64)
+  	fmt.Printf("intId : %v\n", intId)
+  	parsedId := uint32(intId)
+
+  	siteF := r.Context().Value("site")
+  	fmt.Println(siteF)
+  	claims := siteF.(*jwt.Token).Claims
+  	//siteId := claim.(jwt.MapClaims)["site_name"].(string)
+  	siteName := claims.(jwt.MapClaims)["site_name"].(string)
+  	siteRating := claims.(jwt.MapClaims)["rating"].(string)
+  	sitePhone := claims.(jwt.MapClaims)["phone_numbner"].(string)
+  	siteDescription := claims.(jwt.MapClaims)["description"].(string)
+  	siteAddress := claims.(jwt.MapClaims)["address"].(string)
+  	lati :=claims.(jwt.MapClaims)["latitude"].(string)
+  	value, _ := strconv.ParseFloat(lati, 32)
+  	siteLatitude := float32(value)
+  	longi :=claims.(jwt.MapClaims)["latitude"].(string)
+  	value1, _ := strconv.ParseFloat(longi, 32)
+  	siteLongitude := float32(value1)
+
+
+  	site.Id = parsedId
+  	site.SiteName = siteName
+  	site.Rating = siteRating
+  	site.PhoneNumber = sitePhone
+  	site.VacationId = pasedVacation
+  	site.Description = siteDescription
+  	site.Address = siteAddress
+  	site.Latitude =siteLatitude
+  	site.Longitude = siteLongitude
+
+  
+  
+	success, err := backend.DB.SaveSingleSite(site)
+
+  	 if !success {
+		http.Error(w, "Failed to save site",http.StatusInternalServerError)
+		fmt.Printf("Failed to save site %v\n ", err)
+	}
+
+	fmt.Println("sites added successfully")
+	fmt.Fprintf(w, "Site saved %s\n", siteID)
 }

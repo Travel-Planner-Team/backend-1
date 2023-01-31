@@ -35,7 +35,8 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 
 	router.Handle("/vacation/MyVacation", jwtMiddleware.Handler(http.HandlerFunc(GetSitesHandler))).Methods("GET")
 	router.Handle("/vacation", jwtMiddleware.Handler(http.HandlerFunc(SearchSitesHandler))).Methods("POST")
-	router.Handle("/vacation/{vacation_id}/sites/{id}", jwtMiddleware.Handler(http.HandlerFunc(addSiteHandler))).Methods("POST")
+	//router.Handle("/vacation/{vacation_id}/sites/{id}", jwtMiddleware.Handler(http.HandlerFunc(addSiteHandler))).Methods("POST")
+	router.Handle("/vacation/{vacation_id}/sites/{id}", jwtMiddleware.Handler(http.HandlerFunc(AddSiteInVacationHandler))).Methods("POST")
 
 	router.Handle("/vacation", jwtMiddleware.Handler(http.HandlerFunc(GetVacationsHandler))).Methods("GET")
 	router.Handle("/vacation/init", jwtMiddleware.Handler(http.HandlerFunc(SaveVacationsHandler))).Methods("POST")

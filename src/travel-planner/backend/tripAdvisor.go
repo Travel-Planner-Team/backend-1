@@ -64,7 +64,7 @@ func SearchDetailFromTrip(sites []model.Site) {
 		}
 
 		fmt.Println(item)
-		DB.SaveSingleSite(item)
+		//DB.SaveSingleSite(item)
 		sites[key] = item
 	}
 }
