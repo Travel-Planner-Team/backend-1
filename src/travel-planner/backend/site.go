@@ -38,7 +38,8 @@ func (backend *MySQLBackend) SaveSites(sites []model.Site) (bool, error) {
 
 func (backend *MySQLBackend) SaveSingleSite(site model.Site) (bool, error) {
 
-	result := backend.db.Table("Sites").Omit("vacation_id").Create(&site)
+	//result := backend.db.Table("Sites").Omit("vacation_id").Create(&site)
+	result := backend.db.Table("Sites").Create(&site)
 
 	if result.Error != nil || result.RowsAffected == 0 {
 		fmt.Printf("Faild to save site %v\n", site.SiteName)

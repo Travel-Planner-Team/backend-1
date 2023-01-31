@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
+     "strconv"
 	"travel-planner/constants"
 	"travel-planner/model"
 )
@@ -51,8 +51,20 @@ func SearchDetailFromTrip(sites []model.Site) {
 			item.Address = details_Address["address_string"].(string)
 		}
 
+		if jsonRes["latitude"] != nil {
+			var l = jsonRes["latitude"].(string)
+			value, _ := strconv.ParseFloat(l, 32)
+			item.Latitude = float32(value)
+		}
+
+		if jsonRes["longitude"] != nil {
+			var l = jsonRes["longitude"].(string)
+			value, _ := strconv.ParseFloat(l, 32)
+			item.Longitude = float32(value)
+		}
+
 		fmt.Println(item)
-		DB.SaveSingleSite(item)
+		//DB.SaveSingleSite(item)
 		sites[key] = item
 	}
 }

@@ -49,7 +49,7 @@ func SearchSitesInChatGPT(query string) ([]model.Site, error) {
 			item_clean := item[i+2:]
 			var site model.Site
 			site.SiteName = item_clean
-			site.Id = uuid.New().ID()
+			//site.Id = uuid.New().ID()
 			sites = append(sites, site)
 		}
 	}
