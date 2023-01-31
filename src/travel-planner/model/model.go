@@ -46,16 +46,16 @@ type User struct {
 }
 
 type Site struct {
-	Id          uint32 `json:"id"`
-	SiteName    string `json:"site_name"`
-	Rating      string `json:"rating"`
-	PhoneNumber string `json:"phone_number"`
-	VacationId  uint32 `json:"vacation_id"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
+	Id          uint32  `json:"id"`
+	SiteName    string  `json:"site_name"`
+	Rating      string  `json:"rating"`
+	PhoneNumber string  `json:"phone_number"`
+	VacationId  uint32  `json:"vacation_id"`
+	Description string  `json:"description"`
+	Address     string  `json:"address"`
 	Latitude    float32 `json:"latitude"`
 	Longitude   float32 `json:"longitude"`
- }
+}
 
 type TripSite struct {
 	LocationId string     `json:"location_id"`
