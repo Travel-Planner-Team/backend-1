@@ -12,7 +12,7 @@ import (
 
 func CreateUser(user *model.User) (bool, *errors.RestErr) {
 	// username existed?
-	success, err := backend.DB.ReadFromDB(user)
+	success, err := backend.DB.FindUser(user)
 	if err != nil {
 		return false, errors.NewBadRequestError("The database has error")
 	}
@@ -22,12 +22,12 @@ func CreateUser(user *model.User) (bool, *errors.RestErr) {
 
 	// save to db
 
-	success,err = backend.DB.SaveUser(user)
+	success, err = backend.DB.SaveUser(user)
 	if err != nil {
 		return false, errors.NewInternalServerError("Failed to create user")
 	}
 	// fmt.Printf("User is added: %s\n", user.Username)
-  return true, nil
+	return true, nil
 }
 
 func CheckUser(userEmail string, password string) (bool, error) {

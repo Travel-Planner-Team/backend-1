@@ -6,22 +6,19 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	//"strings"
+     "strconv"
 	"travel-planner/constants"
 	"travel-planner/model"
-	//"travel-planner/backend"
-	//"errors"
 )
 
 func SearchDetailFromTrip(sites []model.Site) {
 	for key, item := range sites {
-		fmt.Printf("Sitename:%v\n", item.Site_name)
-		location := GetSearchTripAdvisor(item.Site_name)
+		fmt.Printf("Sitename:%v\n", item.SiteName)
+		location := GetSearchTripAdvisor(item.SiteName)
 		if location == nil {
 			continue
 		}
-		location_id := location.Location_id
+		location_id := location.LocationId
 
 		res := GetDetailsWithLocationId(location_id)
 
@@ -33,9 +30,16 @@ func SearchDetailFromTrip(sites []model.Site) {
 		var jsonRes map[string]interface{}     // declaring a map for key names as string and values as interface
 		_ = json.Unmarshal(resBytes, &jsonRes) // Unmarshalling
 
-		item.Description = jsonRes["description"].(string)
+		if jsonRes == nil {
+			continue
+		}
+
+		if jsonRes["description"] != nil {
+			item.Description = jsonRes["description"].(string)
+		}
+
 		if jsonRes["phone"] != nil {
-			item.Phone_number = jsonRes["phone"].(string)
+			item.PhoneNumber = jsonRes["phone"].(string)
 		}
 
 		if jsonRes["rating"] != nil {
@@ -47,34 +51,40 @@ func SearchDetailFromTrip(sites []model.Site) {
 			item.Address = details_Address["address_string"].(string)
 		}
 
-		fmt.Println(item)
-		DB.SaveSingleSite(item)
-		sites[key] = item
+		if jsonRes["latitude"] != nil {
+			var l = jsonRes["latitude"].(string)
+			value, _ := strconv.ParseFloat(l, 32)
+			item.Latitude = float32(value)
+		}
 
+		if jsonRes["longitude"] != nil {
+			var l = jsonRes["longitude"].(string)
+			value, _ := strconv.ParseFloat(l, 32)
+			item.Longitude = float32(value)
+		}
+
+		fmt.Println(item)
+		//DB.SaveSingleSite(item)
+		sites[key] = item
 	}
 }
 func GetSearchTripAdvisor(name string) *model.TripSite {
-	//key := constants.TRIPADVISOR_API_KEY
-	//ttps://api.content.tripadvisor.com/api/v1/location/search
-	//url := "https://api.content.tripadvisor.com/api/v1/location/search?key=62A808FFA5BB43458AA517B597F7C0E1&searchQuery=hi&language=en"
-	// params := url.Values{}
-	// params.Add("key", key)
-	// params.Add("searchQuery", name)
-	// url := fmt.Sprintf("https://api.content.tripadvisor.com/api/v1/location/search?" +params.Encode()+"&language=en")
 	url := getUrl(name)
 	fmt.Println(url)
 
 	req, _ := http.NewRequest("GET", url, nil)
 
 	req.Header.Add("accept", "application/json")
-	//res := MakeRequest(api_url) // Making the request
-	res, _ := http.DefaultClient.Do(req)
+	res, err := http.DefaultClient.Do(req)
 
-	//defer res.Body.Close()
+	if err != nil {
+		return nil
+	}
+	defer res.Body.Close()
+
 	body, _ := ioutil.ReadAll(res.Body)
 
 	fmt.Println(res)
-	//fmt.Println(string(body))
 
 	resBytes := []byte(body)               // Converting the string "res" into byte array
 	var jsonRes map[string]interface{}     // declaring a map for key names as string and values as interface
@@ -84,10 +94,12 @@ func GetSearchTripAdvisor(name string) *model.TripSite {
 	if data == nil {
 		return nil
 	}
+
 	firstData := data[0]
 	if firstData == nil {
 		return nil
 	}
+
 	fmt.Print(firstData)
 	firstDataJson, _ := json.Marshal(firstData)
 	var tripSites model.TripSite

@@ -3,20 +3,16 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-
 	"net/http"
-	//"regexp"
-	//"strconv"
-	"travel-planner/model"
-
-	//"time"
+	"strconv"
 
 	"travel-planner/backend"
+	"travel-planner/model"
 	"travel-planner/service"
+
 	//"github.com/form3tech-oss/jwt-go"
 	"github.com/gorilla/mux"
-	//"github.com/pborman/uuid"
-	"strconv"
+	"github.com/google/uuid"
 )
 
 func GetSitesHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,16 +46,12 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//line 93 is hardcode for test, we cannot get info from http yet, we should use line65
-	//vacationId := mux.Vars(r)["vacationid"]
+	// vacationId := mux.Vars(r)["vacationid"]
 	city := r.URL.Query().Get("city")
 	interest := r.URL.Query().Get("interest")
 
-	// interest := "Museum"
-	// city := "New York"
-
 	var sites []model.Site
 	sites, err := service.SearchSites(interest, city)
-
 
 	if err != nil {
 		http.Error(w, "Failed to search sites", http.StatusInternalServerError)
@@ -77,35 +69,130 @@ func SearchSitesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addSiteHandler(w http.ResponseWriter, r *http.Request) {
-   fmt.Println("Received one checkout request")
-   w.Header().Set("Content-Type", "application/json")
-   if r.Method == "OPTIONS" {
-       return
-   }
+	fmt.Println("Received one checkout request")
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" {
+		return
+	}
 
-   siteID := mux.Vars(r)["id"]
-   vacationID := mux.Vars(r)["vacation_id"]
-  fmt.Printf("siteid: %v\n", siteID)
-  fmt.Printf("vacationid: %v\n", vacationID)
+	siteId := mux.Vars(r)["id"]
+	vacationId := mux.Vars(r)["vacation_id"]
+	fmt.Printf("siteid: %v\n", siteId)
+	fmt.Printf("vacationid: %v\n", vacationId)
 
-   //userFound, _ := backend.DB.ReadUserByEmail(user.Email)
-   
-  intId ,_:=strconv.ParseInt(siteID, 0, 64)
-  fmt.Printf("intId : %v\n", intId)
-  pasedId := uint32(intId)
-  
-   success, err := backend.DB.AddVacationIdToSite(pasedId, vacationID)
-   if err != nil {
-       fmt.Println("Add LocationId to site failed.")
-       w.Write([]byte(err.Error()))
-       return
-   }
+	siteIdInt, _ := strconv.ParseInt(siteId, 0, 64)
+	parsedSiteId := uint32(siteIdInt)
+	vacationIdInt, _ := strconv.ParseInt(vacationId, 0, 64)
+	parsedVacationId := uint32(vacationIdInt)
 
-   if !success {
-		http.Error(w, "Failed to update LocationId to site",http.StatusInternalServerError)
+	success, err := backend.DB.AddVacationIdToSite(parsedSiteId, parsedVacationId)
+	if err != nil {
+		fmt.Println("Add LocationId to site failed.")
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	if !success {
+		http.Error(w, "Failed to update LocationId to site", http.StatusInternalServerError)
 		fmt.Printf("Failed to update LocationId to site %v\n ", err)
 	}
 
 	fmt.Println("LocationId updated successfully")
-	fmt.Fprintf(w, "Update request received %s\n", siteID)
+	fmt.Fprintf(w, "Update request received %s\n", siteId)
+}
+
+func AddSiteInVacationHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received one add site request")
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" {
+       return
+   	}
+   	var site model.Site
+
+	// siteID := r.FormValue("siteId")
+  	// intId ,_:=strconv.ParseInt(siteID, 0, 64)
+  	// fmt.Printf("intId : %v\n", intId)
+  	// parsedId := uint32(intId)
+
+	vacationID := r.FormValue("vacationId")
+  	fmt.Printf("vacationid: %v\n", vacationID)
+    intVacation ,_:=strconv.ParseInt(vacationID, 0, 64)
+  	parsedVacation := uint32(intVacation)
+
+	latitude := r.FormValue("latitude")
+  	fmt.Printf("latitude: %v\n", latitude)
+    floatLatitude ,_:=strconv.ParseFloat(latitude, 32)
+  	parsedLatitude := float32(floatLatitude)
+	
+	longitude := r.FormValue("longitude")
+  	fmt.Printf("vacationid: %v\n", longitude)
+    floatLongitude ,_:=strconv.ParseFloat(longitude, 32)
+  	parsedLongitude := float32(floatLongitude)
+   
+	
+
+	
+	site = model.Site{
+	  SiteName:    r.FormValue("siteName"),
+	  Rating:      r.FormValue("rating"),
+	  PhoneNumber: r.FormValue("phoneNumber"),
+	  VacationId:  parsedVacation,
+	  Description: r.FormValue("description"),
+	  Address:     r.FormValue("address"),
+	  Latitude:    parsedLatitude,
+	  Longitude:   parsedLongitude,
+	}
+	site.Id = uuid.New().ID()
+   
+
+	// vacationID := mux.Vars(r)["vacation_id"]
+  	// fmt.Printf("vacationid: %v\n", vacationID)
+    // intVacation ,_:=strconv.ParseInt(vacationID, 0, 64)
+  
+  	// pasedVacation := uint32(intVacation)
+
+ 	// // get site id
+  	// siteID := mux.Vars(r)["id"]
+  	// intId ,_:=strconv.ParseInt(siteID, 0, 64)
+  	// fmt.Printf("intId : %v\n", intId)
+  	// parsedId := uint32(intId)
+
+  	// siteF := r.Context().Value("site")
+  	// fmt.Println(siteF)
+  	// claims := siteF.(*jwt.Token).Claims
+  	// //siteId := claim.(jwt.MapClaims)["site_name"].(string)
+  	// siteName := claims.(jwt.MapClaims)["site_name"].(string)
+  	// siteRating := claims.(jwt.MapClaims)["rating"].(string)
+  	// sitePhone := claims.(jwt.MapClaims)["phone_numbner"].(string)
+  	// siteDescription := claims.(jwt.MapClaims)["description"].(string)
+  	// siteAddress := claims.(jwt.MapClaims)["address"].(string)
+  	// lati :=claims.(jwt.MapClaims)["latitude"].(string)
+  	// value, _ := strconv.ParseFloat(lati, 32)
+  	// siteLatitude := float32(value)
+  	// longi :=claims.(jwt.MapClaims)["latitude"].(string)
+  	// value1, _ := strconv.ParseFloat(longi, 32)
+  	// siteLongitude := float32(value1)
+
+
+  	// site.Id = parsedId
+  	// site.SiteName = siteName
+  	// site.Rating = siteRating
+  	// site.PhoneNumber = sitePhone
+  	// site.VacationId = pasedVacation
+  	// site.Description = siteDescription
+  	// site.Address = siteAddress
+  	// site.Latitude =siteLatitude
+  	// site.Longitude = siteLongitude
+
+  
+  
+	success, err := backend.DB.SaveSingleSite(site)
+
+  	 if !success {
+		http.Error(w, "Failed to save site",http.StatusInternalServerError)
+		fmt.Printf("Failed to save site %v\n ", err)
+	}
+
+	fmt.Println("sites added successfully")
+	fmt.Fprintf(w, "Site saved %s\n", site.Id)
 }
