@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 	"travel-planner/backend"
 	"travel-planner/model"
@@ -48,6 +49,13 @@ func CreatePlans (si []model.Site, vacation *model.Vacation) (*model.ListOfShowP
 	// for planId
 	var planId uint32
 
+	vaID, err := strconv.ParseUint(vacation.Id, 10, 32)
+	if err != nil {
+		fmt.Println("cannot convert requestion string vacationID to uint")
+		return &showplanlist
+	}
+
+
 	// we only generate for 3 different ShowPlan
 	for i := 0; i < 3; i++ {
 		// deepCopy the site array and make a new planId
@@ -59,9 +67,9 @@ func CreatePlans (si []model.Site, vacation *model.Vacation) (*model.ListOfShowP
 		
 		plan := &model.Plan{
 			Id : planId,
-			Start_date : startDate,
-			Duration_days : vacation.DurationDays,
-			Vacation_id : vacation.Id,
+			StartDate : startDate,
+			Duration : vacation.DurationDays,
+			VacationId : (uint32)(vaID), // convert string to uint32
 		}
 		backend.DB.SaveVacationPlanToSQL(*plan)
 
@@ -109,10 +117,10 @@ func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, e
 
 		a := &model.Activity{
 			Id : uuid.New().ID(),
-			StartTime: startDate.String(),
-			EndTime: startDate.Add(time.Hour * 2).String(),
-			Date: startDate.String(),
-			Duration_hrs: 2,
+			StartTime: startDate,
+			EndTime: startDate.Add(time.Hour * 2),
+			Date: startDate,
+			Duration: 2,
 			SiteId: site[i].Id,
 			Plan_id: planId,
 		}
@@ -172,10 +180,10 @@ func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, e
 	if startDate.Before(endDate) {
 		a := &model.Activity{
 			Id : uuid.New().ID(),
-			StartTime: startDate.String(),
-			EndTime: startDate.Add(time.Hour * 2).String(),
-			Date: startDate.String(),
-			Duration_hrs: 2,
+			StartTime: startDate,
+			EndTime: startDate.Add(time.Hour * 2),
+			Date: startDate,
+			Duration: 2,
 			SiteId: site[i].Id,
 			Plan_id: planId,
 		}
