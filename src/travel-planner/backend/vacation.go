@@ -38,3 +38,24 @@ func (backend *MySQLBackend) GetSingleVacation(Id uint32) (*model.Vacation, erro
 	}
 	return &vacation, nil
 }
+
+func (backend *MySQLBackend) GetTransportationFromPlanId(planId uint32) ([]model.Transportaion, error) {
+	var transportations []model.Transportaion
+	result := backend.db.Table("Transportations").Where("plan_id = ?", planId).Find(&transportations)
+	fmt.Print(transportations, result)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return transportations, nil
+}
+
+func (backend *MySQLBackend) GetSiteFromSiteId(siteId uint32) (*model.Site, error) {
+	var site *model.Site
+	result := backend.db.Table("Sites").Where("id = ?", siteId).Find(&site)
+	fmt.Print(site, result)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return site, nil
+}
+

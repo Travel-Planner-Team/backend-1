@@ -55,6 +55,7 @@ type Site struct {
 	Address     string  `json:"address"`
 	Latitude    float32 `json:"latitude"`
 	Longitude   float32 `json:"longitude"`
+	Url         string  `json:"url"`
 }
 
 type TripSite struct {
@@ -123,6 +124,37 @@ type ShowPlan struct {
 type ListOfShowPlan struct {
 	ShowPlans   []ShowPlan `json:"show_plan_list"`
 	Vacation_id string     `json:"vacation_id"`
+}
+
+type ActivitiesList struct {
+	ActivityID            int       `json:"activity_id"`
+	ActivityName          string    `json:"activity_name"`
+	ActivityType          string    `json:"activity_type"`
+	ActivityDescription   string    `json:"activity_description"`
+	ActivityAddress       string    `json:"activity_address"`
+	ActivityPhone         string    `json:"activity_phone"`
+	ActivityWebsite       string    `json:"activity_website"`
+	ActivityImage         string    `json:"activity_image"`
+	ActivityStartDatetime time.Time `json:"activity_start_datetime"`
+	ActivityEndDatetime   time.Time `json:"activity_end_datetime"`
+	ActivityDate          time.Time `json:"activity_date"`
+	ActivityDuration      int64     `json:"activity_duration"`
+}
+
+type DaysInfo struct {
+	DayIDX int              `json:"day_idx"`
+	Act    []ActivitiesList `json:"activities"`
+	Trans  []Transportaion  `json:"transportation"`
+}
+
+type PlansInfo struct {
+	PlanIDX int      `json:"plan_idx"`
+	Days    DaysInfo `json:"days"`
+}
+
+type PlanDetail struct {
+	VacationID int         `json:"vacation_id"`
+	Plans      []PlansInfo `json:"plans"`
 }
 
 func (user *User) Validate() *errors.RestErr {
