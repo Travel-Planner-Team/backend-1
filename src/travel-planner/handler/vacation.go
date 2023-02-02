@@ -74,8 +74,6 @@ func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var plansInfo []model.PlansInfo
-	// // Marshal the activities to JSON
-	// jsonData, err := json.Marshal(plans)
 
 	// plan details： activities + transportations
 	// get each slice of plans

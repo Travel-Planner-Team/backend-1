@@ -58,4 +58,3 @@ func (backend *MySQLBackend) GetSiteFromSiteId(siteId uint32) (*model.Site, erro
 	}
 	return site, nil
 }
-

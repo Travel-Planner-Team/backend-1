@@ -51,4 +51,3 @@ func (backend *MySQLBackend) GetPlanFromVacationId(vacationId uint32) ([]model.P
 	}
 	return plans, nil
 }
-
