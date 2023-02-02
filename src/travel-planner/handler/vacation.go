@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"travel-planner/model"
 	"travel-planner/service"
 
@@ -59,9 +60,75 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received request: /vacation/{vacation_id}/plan")
-	vacationID := r.Context().Value("vacation_id")
+	vacationID := r.URL.Query().Get("vacation_id")
 	fmt.Printf("vacationID: %v\n", vacationID)
 	w.Header().Set("Content_Type", "application/json")
+	// get plans
+	intId, _ := strconv.ParseInt(vacationID, 0, 64)
+	pasedId := uint32(intId)
+	plans, err := service.GetPlanInfoFromVactionId(pasedId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var plansInfo []model.PlansInfo
+	// // Marshal the activities to JSON
+	// jsonData, err := json.Marshal(plans)
+
+	// plan details： activities + transportations
+	// get each slice of plans
+	for i := 0; i < len(plans); i++ {
+		plan := &plans[i]
+		fmt.Println("planId: ", plan.Id)
+		intId := plan.Id
+		pasedId := uint32(intId)
+		activities, err := service.GetActivitiesInfoFromPlanId(pasedId)
+		fmt.Println("act leng: ", len(activities))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		var finalActList []model.ActivitiesList
+		for i := 0; i < len(activities); i++ {
+			activity := &activities[i]
+			site, err := service.GetSiteFromSiteId(activity.SiteId)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			activityList := model.ActivitiesList{int(activity.Id), site.SiteName, "type", site.Description, site.Address,
+				site.PhoneNumber, site.Url, "image", activity.StartTime, activity.EndTime, activity.Date, activity.Duration}
+			fmt.Println(activityList)
+
+			finalActList = append(finalActList, activityList)
+
+		}
+
+		// get []transportations
+		transportations, err := service.GetTransportationFromPlanId(pasedId)
+		fmt.Println(transportations)
+		// jsonData, err := json.Marshal(transportations)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		// w.Write(jsonData)
+
+		daysInfo := model.DaysInfo{1, finalActList, transportations}
+		plansInfo = append(plansInfo, model.PlansInfo{int(pasedId), daysInfo})
+
+	}
+
+	planDetail := model.PlanDetail{int(pasedId), plansInfo}
+	jsonData, err := json.Marshal(planDetail)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Write(jsonData)
 }
 
 func SavePlanInfoHandler(w http.ResponseWriter, r *http.Request) {

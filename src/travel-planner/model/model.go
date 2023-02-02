@@ -46,16 +46,17 @@ type User struct {
 }
 
 type Site struct {
-	Id          uint32 `json:"id"`
-	SiteName    string `json:"site_name"`
-	Rating      string `json:"rating"`
-	PhoneNumber string `json:"phone_number"`
-	VacationId  uint32 `json:"vacation_id"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
+	Id          uint32  `json:"id"`
+	SiteName    string  `json:"site_name"`
+	Rating      string  `json:"rating"`
+	PhoneNumber string  `json:"phone_number"`
+	VacationId  uint32  `json:"vacation_id"`
+	Description string  `json:"description"`
+	Address     string  `json:"address"`
 	Latitude    float32 `json:"latitude"`
 	Longitude   float32 `json:"longitude"`
- }
+	Url         string  `json:"url"`
+}
 
 type TripSite struct {
 	LocationId string     `json:"location_id"`
@@ -97,16 +98,16 @@ type Activity struct {
 	Date      time.Time `json:"date"`
 	Duration  int64     `json:"duration"`
 	SiteId    uint32    `json:"site_id"`
-	Plan_id      uint32 `json:"plan_id"`
+	Plan_id   uint32    `json:"plan_id"`
 }
 
 type Transportaion struct {
-	Id   uint32    `json:"id"`
+	Id        uint32 `json:"id"`
 	Type      int    `json:"type"`
 	StartTime string `json:"start_time"`
 	EndTime   string `json:"end_time"`
 	Date      string `json:"date"`
-	Plan_id       uint32    `json:"plan_id"`
+	Plan_id   uint32 `json:"plan_id"`
 }
 
 type SavePlanRequestBody struct {
@@ -115,14 +116,45 @@ type SavePlanRequestBody struct {
 }
 
 type ShowPlan struct {
-	Plan_id uint32 `json:"planid"`
+	Plan_id                uint32          `json:"planid"`
 	ActivityInfoList       []Activity      `json:"activity_info_list"`
 	TransportationInfoList []Transportaion `json:"transportation_info_list"`
 }
 
 type ListOfShowPlan struct {
-	ShowPlans []ShowPlan `json:"show_plan_list"`
-	Vacation_id   string    `json:"vacation_id"`
+	ShowPlans   []ShowPlan `json:"show_plan_list"`
+	Vacation_id string     `json:"vacation_id"`
+}
+
+type ActivitiesList struct {
+	ActivityID            int       `json:"activity_id"`
+	ActivityName          string    `json:"activity_name"`
+	ActivityType          string    `json:"activity_type"`
+	ActivityDescription   string    `json:"activity_description"`
+	ActivityAddress       string    `json:"activity_address"`
+	ActivityPhone         string    `json:"activity_phone"`
+	ActivityWebsite       string    `json:"activity_website"`
+	ActivityImage         string    `json:"activity_image"`
+	ActivityStartDatetime time.Time `json:"activity_start_datetime"`
+	ActivityEndDatetime   time.Time `json:"activity_end_datetime"`
+	ActivityDate          time.Time `json:"activity_date"`
+	ActivityDuration      int64     `json:"activity_duration"`
+}
+
+type DaysInfo struct {
+	DayIDX int              `json:"day_idx"`
+	Act    []ActivitiesList `json:"activities"`
+	Trans  []Transportaion  `json:"transportation"`
+}
+
+type PlansInfo struct {
+	PlanIDX int      `json:"plan_idx"`
+	Days    DaysInfo `json:"days"`
+}
+
+type PlanDetail struct {
+	VacationID int         `json:"vacation_id"`
+	Plans      []PlansInfo `json:"plans"`
 }
 
 func (user *User) Validate() *errors.RestErr {

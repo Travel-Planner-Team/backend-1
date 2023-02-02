@@ -41,3 +41,13 @@ func (backend *MySQLBackend) SavePlanInfoToSQL(planInfo model.SavePlanRequestBod
 	}
 	return nil
 }
+
+func (backend *MySQLBackend) GetPlanFromVacationId(vacationId uint32) ([]model.Plan, error) {
+	var plans []model.Plan
+	result := backend.db.Table("Plans").Where("vacation_id = ?", vacationId).Find(&plans)
+	fmt.Print(plans, result)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return plans, nil
+}
