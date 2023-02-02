@@ -26,15 +26,15 @@ func (backend *MySQLBackend) SaveVacation(vacation *model.Vacation) (bool, error
 func (backend *MySQLBackend) GetSingleVacation(Id uint32) (*model.Vacation, error) {
 	var vacation model.Vacation
 
-    result := backend.db.Table("Vacations").Where("id = ?",Id).Find(&vacation)
+	result := backend.db.Table("Vacations").Where("id = ?", Id).Find(&vacation)
 	fmt.Println(vacation, result)
-	if result.Error != nil{
+	if result.Error != nil {
 		fmt.Println("Failed to get vacation from db")
 		return nil, result.Error
 	}
-	if result.RowsAffected == 0{
+	if result.RowsAffected == 0 {
 		fmt.Printf("No vacation record in vacation %v\n", Id)
-      return nil, nil
+		return nil, nil
 	}
 	return &vacation, nil
 }

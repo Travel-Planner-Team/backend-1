@@ -37,7 +37,7 @@ func GetActivitiesInfoFromPlanId(plan_id uint32) ([]model.Activity, error) {
 
 func GetRoutesFromSites(sites []uint32) (int32, []model.Activity, []model.Transportaion) {
 	return backend.DB.GetRoutes(sites)
-	
+
 }
 
 func SaveVacationPlan(plan model.Plan) error {

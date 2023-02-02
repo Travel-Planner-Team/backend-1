@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-     "strconv"
+	"strconv"
 	"travel-planner/constants"
 	"travel-planner/model"
 )

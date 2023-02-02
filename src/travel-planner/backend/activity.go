@@ -30,18 +30,18 @@ func (backend *MySQLBackend) GetRoutes(sites []uint32) (int32, []model.Activity,
 	}
 	return 8, activities, tranportations
 }
-func (backend *MySQLBackend) SaveTransportation (transportation *model.Transportaion) (bool, error) {
+func (backend *MySQLBackend) SaveTransportation(transportation *model.Transportaion) (bool, error) {
 	result := backend.db.Table("Transportations").Create(&transportation)
-	if err := result.Error; err != nil{
+	if err := result.Error; err != nil {
 		return false, err
 	}
 	fmt.Println("Transportation saved in db")
 	return true, nil
 }
 
-func (backend *MySQLBackend) SaveActivity (activity *model.Activity) (bool, error) {
+func (backend *MySQLBackend) SaveActivity(activity *model.Activity) (bool, error) {
 	result := backend.db.Table("Activities").Create(&activity)
-	if err := result.Error; err != nil{
+	if err := result.Error; err != nil {
 		return false, err
 	}
 	fmt.Println("Activity saved in db")

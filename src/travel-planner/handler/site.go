@@ -83,7 +83,6 @@ func AddSiteHandler(w http.ResponseWriter, r *http.Request) {
 	parsedSiteId := uint32(siteIdInt)
 	vacationIdInt, _ := strconv.ParseInt(vacationId, 0, 64)
 	parsedVacationId := uint32(vacationIdInt)
-	
 
 	success, err := backend.DB.AddVacationIdToSite(parsedSiteId, parsedVacationId)
 	if err != nil {
