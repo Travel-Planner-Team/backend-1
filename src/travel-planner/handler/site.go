@@ -11,8 +11,8 @@ import (
 	"travel-planner/service"
 
 	//"github.com/form3tech-oss/jwt-go"
-	"github.com/gorilla/mux"
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 func GetSitesHandler(w http.ResponseWriter, r *http.Request) {
@@ -84,6 +84,7 @@ func addSiteHandler(w http.ResponseWriter, r *http.Request) {
 	parsedSiteId := uint32(siteIdInt)
 	vacationIdInt, _ := strconv.ParseInt(vacationId, 0, 64)
 	parsedVacationId := uint32(vacationIdInt)
+	
 
 	success, err := backend.DB.AddVacationIdToSite(parsedSiteId, parsedVacationId)
 	if err != nil {

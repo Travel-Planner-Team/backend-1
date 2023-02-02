@@ -97,19 +97,32 @@ type Activity struct {
 	Date      time.Time `json:"date"`
 	Duration  int64     `json:"duration"`
 	SiteId    uint32    `json:"site_id"`
+	Plan_id      uint32 `json:"plan_id"`
 }
 
 type Transportaion struct {
-	Id        uint32    `json:"id"`
-	Type      string    `json:"type"`
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
-	Date      time.Time `json:"date"`
+	Id   uint32    `json:"id"`
+	Type      int    `json:"type"`
+	StartTime string `json:"start_time"`
+	EndTime   string `json:"end_time"`
+	Date      string `json:"date"`
+	Plan_id       uint32    `json:"plan_id"`
 }
 
 type SavePlanRequestBody struct {
 	ActivityInfoList       []Activity      `json:"activity_info_list"`
 	TransportationInfoList []Transportaion `json:"transportation_info_list"`
+}
+
+type ShowPlan struct {
+	Plan_id uint32 `json:"planid"`
+	ActivityInfoList       []Activity      `json:"activity_info_list"`
+	TransportationInfoList []Transportaion `json:"transportation_info_list"`
+}
+
+type ListOfShowPlan struct {
+	ShowPlans []ShowPlan `json:"show_plan_list"`
+	Vacation_id   string    `json:"vacation_id"`
 }
 
 func (user *User) Validate() *errors.RestErr {
