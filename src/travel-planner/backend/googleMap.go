@@ -40,5 +40,4 @@ func GetDistanceMatrix(sites []model.Site, index int) (*maps.DistanceMatrixRespo
 	// once create transportation, and return back to service level
 
 	return route, err
-
 }

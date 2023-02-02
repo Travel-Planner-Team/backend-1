@@ -12,6 +12,7 @@ import (
 	"googlemaps.github.io/maps"
 )
 
+
 func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 	// Step 1
 	// get all the site list from the backend using GetSitesInVacation
@@ -40,6 +41,7 @@ func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 	// get list of ShowPlan from DB
 	return CreatePlans(sites, vacation), err
 }
+
 
 func CreatePlans(si []model.Site, vacation *model.Vacation) *model.ListOfShowPlan {
 	var showplanlist model.ListOfShowPlan
@@ -91,7 +93,6 @@ func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, e
 	temp := site[randomIndex]
 	site[randomIndex] = site[0]
 	site[0] = temp
-
 	// initialize index
 	i := 0
 	nextDateSetter := startDate.AddDate(0, 0, 1)
