@@ -28,7 +28,7 @@ type UserStub struct {
 }
 
 type Vacation struct {
-	Id           string    `json:"id"`
+	Id           uint32    `json:"id"`
 	Destination  string    `json:"destination"`
 	StartDate    time.Time `json:"start_date"`
 	EndDate      time.Time `json:"end_date"`
