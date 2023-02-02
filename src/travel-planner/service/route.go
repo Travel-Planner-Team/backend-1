@@ -12,7 +12,6 @@ import (
 	"googlemaps.github.io/maps"
 )
 
-
 func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 	// Step 1
 	// get all the site list from the backend using GetSitesInVacation
@@ -41,7 +40,6 @@ func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 	// get list of ShowPlan from DB
 	return CreatePlans(sites, vacation), err
 }
-
 
 func CreatePlans(si []model.Site, vacation *model.Vacation) *model.ListOfShowPlan {
 	var showplanlist model.ListOfShowPlan
