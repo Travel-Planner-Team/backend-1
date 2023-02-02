@@ -30,6 +30,7 @@ func (backend *MySQLBackend) GetRoutes(sites []uint32) (int32, []model.Activity,
 	}
 	return 8, activities, tranportations
 }
+
 func (backend *MySQLBackend) SaveTransportation (transportation *model.Transportaion) (bool, error) {
 	result := backend.db.Table("Transportations").Create(&transportation)
 	if err := result.Error; err != nil{

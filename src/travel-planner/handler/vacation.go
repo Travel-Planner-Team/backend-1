@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
 	"travel-planner/model"
 	"travel-planner/service"
 
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 )
 
 func GetVacationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +42,7 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vacation.Id = uuid.New()
+	vacation.Id = uuid.New().ID()
 	success, err := service.AddVacation(&vacation)
 	if err != nil || !success {
 		fmt.Println(err)

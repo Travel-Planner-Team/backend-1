@@ -28,7 +28,7 @@ type UserStub struct {
 }
 
 type Vacation struct {
-	Id           string    `json:"id"`
+	Id           uint32    `json:"id"`
 	Destination  string    `json:"destination"`
 	StartDate    time.Time `json:"start_date"`
 	EndDate      time.Time `json:"end_date"`
@@ -46,16 +46,16 @@ type User struct {
 }
 
 type Site struct {
-	Id          uint32 `json:"id"`
-	SiteName    string `json:"site_name"`
-	Rating      string `json:"rating"`
-	PhoneNumber string `json:"phone_number"`
-	VacationId  uint32 `json:"vacation_id"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
+	Id          uint32  `json:"id"`
+	SiteName    string  `json:"site_name"`
+	Rating      string  `json:"rating"`
+	PhoneNumber string  `json:"phone_number"`
+	VacationId  uint32  `json:"vacation_id"`
+	Description string  `json:"description"`
+	Address     string  `json:"address"`
 	Latitude    float32 `json:"latitude"`
 	Longitude   float32 `json:"longitude"`
- }
+}
 
 type TripSite struct {
 	LocationId string     `json:"location_id"`
@@ -97,16 +97,16 @@ type Activity struct {
 	Date      time.Time `json:"date"`
 	Duration  int64     `json:"duration"`
 	SiteId    uint32    `json:"site_id"`
-	Plan_id      uint32 `json:"plan_id"`
+	Plan_id   uint32    `json:"plan_id"`
 }
 
 type Transportaion struct {
-	Id   uint32    `json:"id"`
+	Id        uint32 `json:"id"`
 	Type      int    `json:"type"`
 	StartTime string `json:"start_time"`
 	EndTime   string `json:"end_time"`
 	Date      string `json:"date"`
-	Plan_id       uint32    `json:"plan_id"`
+	Plan_id   uint32 `json:"plan_id"`
 }
 
 type SavePlanRequestBody struct {
@@ -115,14 +115,14 @@ type SavePlanRequestBody struct {
 }
 
 type ShowPlan struct {
-	Plan_id uint32 `json:"planid"`
+	Plan_id                uint32          `json:"planid"`
 	ActivityInfoList       []Activity      `json:"activity_info_list"`
 	TransportationInfoList []Transportaion `json:"transportation_info_list"`
 }
 
 type ListOfShowPlan struct {
-	ShowPlans []ShowPlan `json:"show_plan_list"`
-	Vacation_id   string    `json:"vacation_id"`
+	ShowPlans   []ShowPlan `json:"show_plan_list"`
+	Vacation_id string     `json:"vacation_id"`
 }
 
 func (user *User) Validate() *errors.RestErr {
