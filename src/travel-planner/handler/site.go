@@ -19,11 +19,15 @@ func GetSitesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//line 66 is hardcode for test, we cannot get info from http yet, we should use line65
-	//vacationId := mux.Vars(r)["vacationid"]
-	var vacationId uint32 = 1
+	vacationId := mux.Vars(r)["vacationid"]
+	fmt.Println(vacationId)
+	// var vacationId uint32 = 1
 	var sites []model.Site
 	var err error
-	sites, err = service.GetSitesList(vacationId)
+	parsedId, _ := strconv.ParseUint(vacationId, 10, 16)
+	sites, err = service.GetSitesList(uint32(parsedId))
+
+	fmt.Println(vacationId)
 
 	if err != nil || sites == nil {
 		http.Error(w, "Failed to get sites from bd", http.StatusInternalServerError)
@@ -113,8 +117,8 @@ func AddSiteInVacationHandler(w http.ResponseWriter, r *http.Request) {
 	// fmt.Printf("intId : %v\n", intId)
 	// parsedId := uint32(intId)
 
-	vacationID := r.FormValue("vacationId")
-	fmt.Printf("vacationid: %v\n", vacationID)
+	vacationID := mux.Vars(r)["vacation_id"]
+	fmt.Printf("vacationid parsed: %v\n", vacationID)
 	intVacation, _ := strconv.ParseInt(vacationID, 0, 64)
 	parsedVacation := uint32(intVacation)
 
@@ -137,6 +141,8 @@ func AddSiteInVacationHandler(w http.ResponseWriter, r *http.Request) {
 		Address:     r.FormValue("address"),
 		Latitude:    parsedLatitude,
 		Longitude:   parsedLongitude,
+		SiteUrl:     "blah",
+		ImageUrl:    "blah",
 		Id:          uuid.New().ID(),
 	}
 

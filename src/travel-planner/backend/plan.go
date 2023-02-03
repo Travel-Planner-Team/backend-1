@@ -24,12 +24,13 @@ func (backend *MySQLBackend) SavePlanInfoToSQL(planInfo model.SavePlanRequestBod
 		}
 		count++
 	}
+
 	if count == 0 {
 		return errors.New("failed to save all the activities info")
 	}
 
 	for _, transportaion := range planInfo.TransportationInfoList {
-		result := backend.db.Table("Transportations")
+		result := backend.db.Table("Transportations").Create(&transportaion)
 		if result.Error != nil || result.RowsAffected == 0 {
 			fmt.Printf("Faild to save activities %v\n", transportaion.Id)
 		}
