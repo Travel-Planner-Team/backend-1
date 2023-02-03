@@ -7,22 +7,21 @@ import (
 
 func (backend *MySQLBackend) GetActivityFromPlanId(plan_id uint32) ([]model.Activity, error) {
 	var activities []model.Activity
-	result := backend.db.Table("Activities").Find(&activities)
-	fmt.Print(activities, result)
+	result := backend.db.Table("Activities").Where("plan_id = ?", plan_id).Order("start_time").Find(&activities)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return activities, nil
 }
 
-func (backend *MySQLBackend) GetRoutes(sites []uint32) (int32, []model.Activity, []model.Transportaion) {
+func (backend *MySQLBackend) GetRoutes(sites []uint32) (int32, []model.Activity, []model.Transportation) {
 	var activities []model.Activity
 	result := backend.db.Table("Activities").Find(&activities)
 	fmt.Println(activities, result)
 	if result.Error != nil {
 		return -1, nil, nil
 	}
-	var tranportations []model.Transportaion
+	var tranportations []model.Transportation
 	result = backend.db.Table("Transportations").Find(&tranportations)
 	fmt.Println(activities, result)
 	if result.Error != nil {
@@ -31,7 +30,7 @@ func (backend *MySQLBackend) GetRoutes(sites []uint32) (int32, []model.Activity,
 	return 8, activities, tranportations
 }
 
-func (backend *MySQLBackend) SaveTransportation (transportation *model.Transportaion) (bool, error) {
+func (backend *MySQLBackend) SaveTransportation(transportation *model.Transportation) (bool, error) {
 	result := backend.db.Table("Transportations").Create(&transportation)
 	if err := result.Error; err != nil {
 		return false, err

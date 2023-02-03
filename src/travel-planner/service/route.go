@@ -12,7 +12,6 @@ import (
 	"googlemaps.github.io/maps"
 )
 
-
 func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 	// Step 1
 	// get all the site list from the backend using GetSitesInVacation
@@ -23,7 +22,6 @@ func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 		return nil, nil
 	}
 	fmt.Println("Successfully get sites")
-	fmt.Println(sites)
 
 	// Step 2
 	// get the corresponding vacation by vacationId, because we need
@@ -41,7 +39,6 @@ func ShowRoute(vacationId uint32) (*model.ListOfShowPlan, error) {
 	// get list of ShowPlan from DB
 	return CreatePlans(sites, vacation), err
 }
-
 
 func CreatePlans(si []model.Site, vacation *model.Vacation) *model.ListOfShowPlan {
 	var showplanlist model.ListOfShowPlan
@@ -61,10 +58,10 @@ func CreatePlans(si []model.Site, vacation *model.Vacation) *model.ListOfShowPla
 		endDate := vacation.EndDate
 
 		plan := &model.Plan{
-			Id:         planId,
-			StartDate:  startDate,
-			Duration:   vacation.DurationDays,
-			VacationId: vaID, // convert string to uint32
+			Id:           planId,
+			StartDate:    startDate,
+			DurationDays: vacation.DurationDays,
+			VacationId:   vaID, // convert string to uint32
 		}
 		backend.DB.SaveVacationPlanToSQL(*plan)
 
@@ -82,13 +79,16 @@ func CreatePlans(si []model.Site, vacation *model.Vacation) *model.ListOfShowPla
 	}
 	return &showplanlist
 }
-func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, endDate time.Time, planId uint32) ([]model.Activity, []model.Transportaion) {
 
+func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, endDate time.Time, planId uint32) ([]model.Activity, []model.Transportation) {
+	fmt.Println(site)
 	// need to make the randomIndex real random
 	rand.Seed(time.Now().UnixNano())
 	randomIndex := rand.Intn(len(site))
 	var activitylist []model.Activity
-	var transportaionlist []model.Transportaion
+	var transportationlist []model.Transportation
+
+	const DEFAULT_DURATION = 9.0
 
 	temp := site[randomIndex]
 	site[randomIndex] = site[0]
@@ -110,16 +110,16 @@ func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, e
 		}
 
 		a := &model.Activity{
-			Id:        uuid.New().ID(),
-			StartTime: startDate,
-			EndTime:   startDate.Add(time.Hour * 2),
-			Date:      startDate,
-			Duration:  2,
-			SiteId:    site[i].Id,
-			Plan_id:   planId,
+			Id:          uuid.New().ID(),
+			StartTime:   startDate,
+			EndTime:     startDate.Add(time.Hour * DEFAULT_DURATION),
+			Date:        startDate,
+			DurationHrs: DEFAULT_DURATION,
+			SiteId:      site[i].Id,
+			PlanId:      planId,
 		}
 		// update time after visiting the site
-		startDate = startDate.Add(time.Hour * 2)
+		startDate = startDate.Add(time.Hour * DEFAULT_DURATION)
 		activitylist = append(activitylist, *a)
 		// save activity to db
 		backend.DB.SaveActivity(a)
@@ -140,25 +140,27 @@ func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, e
 			i++
 			continue
 		}
+
 		// use while loop would be easier to control the index
 		i++
 		temp = site[index+i]
 		site[index+i] = site[i]
 		site[i] = temp
 
-		t := &model.Transportaion{
+		t := &model.Transportation{
 			Id:        uuid.New().ID(),
 			Type:      0,
-			StartTime: startDate.String(),
-			EndTime:   startDate.Add(duration).String(), // need to add processed duration
-			Date:      startDate.String(),
+			StartTime: startDate,
+			EndTime:   startDate.Add(duration), // need to add processed duration
+			Date:      startDate,
 			// need to add duration
-			Plan_id: planId,
+			DurationHrs: float32(duration.Hours()),
+			PlanId:      planId,
 		}
 
 		// Again, update the startDate time
 		startDate = startDate.Add(duration)
-		transportaionlist = append(transportaionlist, *t)
+		transportationlist = append(transportationlist, *t)
 		backend.DB.SaveTransportation(t)
 
 		if startDate.After(endDate) {
@@ -173,22 +175,22 @@ func GenerateActivityAndTransportation(site []model.Site, startDate time.Time, e
 	}
 	if startDate.Before(endDate) {
 		a := &model.Activity{
-			Id:        uuid.New().ID(),
-			StartTime: startDate,
-			EndTime:   startDate.Add(time.Hour * 2),
-			Date:      startDate,
-			Duration:  2,
-			SiteId:    site[i].Id,
-			Plan_id:   planId,
+			Id:          uuid.New().ID(),
+			StartTime:   startDate,
+			EndTime:     startDate.Add(time.Hour * DEFAULT_DURATION),
+			Date:        startDate,
+			DurationHrs: DEFAULT_DURATION,
+			SiteId:      site[i].Id,
+			PlanId:      planId,
 		}
 		// update time after visiting the site
-		startDate = startDate.Add(time.Hour * 2)
+		startDate = startDate.Add(time.Hour * DEFAULT_DURATION)
 		activitylist = append(activitylist, *a)
 		// save activity to db
 		backend.DB.SaveActivity(a)
 	}
 
-	return activitylist, transportaionlist
+	return activitylist, transportationlist
 }
 
 func FindTheClosestSite(res *maps.DistanceMatrixResponse) (time.Duration, int, error) {

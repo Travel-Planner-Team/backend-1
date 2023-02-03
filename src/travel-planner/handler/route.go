@@ -15,7 +15,7 @@ func GetPlanHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received a get sites request in the get all plans handler")
 	va := mux.Vars(r)["vacation_id"]
 	fmt.Println(va)
-	vacationID, err := strconv.ParseUint(va, 10, 16)
+	vacationID, err := strconv.ParseUint(va, 10, 32)
 	if err != nil {
 		fmt.Println("cannot convert requestion id to vacationID")
 	}
