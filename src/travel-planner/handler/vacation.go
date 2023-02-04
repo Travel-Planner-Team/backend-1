@@ -7,7 +7,8 @@ import (
 	"travel-planner/model"
 	"travel-planner/service"
 
-	"github.com/pborman/uuid"
+	//"github.com/pborman/uuid"
+	"github.com/google/uuid"
 )
 
 func GetVacationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,8 +41,8 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Cannot decode vacation input", http.StatusBadRequest)
 		return
 	}
-
-	vacation.Id = uuid.New()
+ 
+	vacation.Id = uuid.New().ID()
 	success, err := service.AddVacation(&vacation)
 	if err != nil || !success {
 		fmt.Println(err)
@@ -53,7 +54,8 @@ func SaveVacationsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Fail to save vacation into DB", http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte("Vacation saved: " + fmt.Sprint(vacation.Id)))
+	//w.Write([]byte("Vacation saved: " + fmt.Sprint(vacation.Id)))
+	
 	w.Write(js)
 }
 

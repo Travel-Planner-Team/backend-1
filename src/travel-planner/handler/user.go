@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"travel-planner/backend"
 	"travel-planner/model"
 	"travel-planner/service"
 	"travel-planner/util/errors"
@@ -85,10 +86,13 @@ func SigninHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("User doesn't exists or wrong password\n")
 		return
 	}
+    var userInfo *model.User
+	userInfo, err = backend.DB.ReadUserByEmail(user.Email);
 
 	// generate token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": user.Email,
+		"id" : userInfo.Id,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	})
 
@@ -119,6 +123,12 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 	fmt.Printf("id: %v\n", id)
+	// user := r.Context().Value("user")
+    // claims := user.(*jwt.Token).Claims
+    // email := claims.(jwt.MapClaims)["email"]
+	// str := fmt.Sprintf("%v", email)
+    // user, err := backend.DB.ReadUserByEmail(str)
+	
 
 	intId, _ := strconv.ParseInt(id, 0, 64)
 	fmt.Printf("intId : %v\n", intId)
